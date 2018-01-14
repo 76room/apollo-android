@@ -8,4 +8,8 @@
     <color name="colorAccent">#53c1bd</color>
     <color name="background">#2b3d48</color>
     <color name="colorAccentLight">#ededec</color>
+
+    <color name="colorPrimaryAnalog">#006662</color>
+    <color name="colorPrimaryDarkAnalog">#003633</color>
+    <color name="colorAccentAnalog">#00E875</color>
 </resources>
