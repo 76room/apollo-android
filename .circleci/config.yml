@@ -39,12 +39,8 @@ jobs:
       - store_test_results:
           path: app/build/test-results
       - run:
-          name: Show
-          command: echo $CIRCLE_ARTIFACTS
-          command: echo $APPETIZE_ID
-      - run:
           name: Deploy to appetize.io
-          command: curl https://$APPETIZE_ID@api.appetize.io/v1/apps -F "file=@$CIRCLE_ARTIFACTS/apks/debug/app-debug.apk" -F "platform=android"
+          command: curl https://$APPETIZE_ID@api.appetize.io/v1/apps -F "file=@app/build/outputs/apk/debug/app-debug.apk" -F "platform=android"
           
       
 general:
