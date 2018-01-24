@@ -42,7 +42,7 @@ jobs:
           command: pwd
       - run:
           name: Deploy to appetize.io
-          command: curl https://tok_rw850ccuxyjyup9xqqf2pm6w8w@api.appetize.io/v1/apps -F "file=@apks/debug/app-debug.apk" -F "platform=android"
+          command: curl https://tok_rw850ccuxyjyup9xqqf2pm6w8w@api.appetize.io/v1/apps -F "file=@CIRCLE_ARTIFACTS/apks/debug/app-debug.apk" -F "platform=android"
           
       
 general:
