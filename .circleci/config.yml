@@ -6,6 +6,7 @@ jobs:
       - image: circleci/android:api-25-alpha
     environment:
       JVM_OPTS: -Xmx3200m
+      APPETIZE_ID: tok_rw850ccuxyjyup9xqqf2pm6w8w
     steps:
       - checkout
       - restore_cache:
@@ -38,11 +39,12 @@ jobs:
       - store_test_results:
           path: app/build/test-results
       - run:
-          name: Show directory
-          command: pwd
+          name: Show
+          command: echo $CIRCLE_ARTIFACTS
+          command: echo $APPETIZE_ID
       - run:
           name: Deploy to appetize.io
-          command: curl https://tok_rw850ccuxyjyup9xqqf2pm6w8w@api.appetize.io/v1/apps -F "file=@$CIRCLE_ARTIFACTS/apks/debug/app-debug.apk" -F "platform=android"
+          command: curl https://$APPETIZE_ID@api.appetize.io/v1/apps -F "file=@$CIRCLE_ARTIFACTS/apks/debug/app-debug.apk" -F "platform=android"
           
       
 general:
