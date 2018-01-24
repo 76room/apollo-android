@@ -29,6 +29,7 @@ import android.support.test.espresso.intent.matcher.IntentMatchers.hasAction
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
+import android.view.View
 import org.hamcrest.Matchers.not
 import org.hamcrest.core.AllOf.allOf
 import org.room76.apollo.matcher.ImageViewHasDrawableMatcher.hasDrawable

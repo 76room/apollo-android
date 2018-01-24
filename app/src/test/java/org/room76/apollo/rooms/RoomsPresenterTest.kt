@@ -4,7 +4,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
-import org.mockito.InOrder
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
@@ -58,9 +57,9 @@ class RoomsPresenterTest {
 
         // Then progress indicator is hidden and rooms are shown in UI
         val inOrder = Mockito.inOrder(mRoomsView)
-        inOrder.verify<View>(mRoomsView).setProgressIndicator(true)
-        inOrder.verify<View>(mRoomsView).setProgressIndicator(false)
-        verify<View>(mRoomsView).showRooms(ROOMS)
+        inOrder.verify<RoomsContract.View>(mRoomsView).setProgressIndicator(true)
+        inOrder.verify<RoomsContract.View>(mRoomsView).setProgressIndicator(false)
+        verify<RoomsContract.View>(mRoomsView).showRooms(ROOMS)
     }
 
     @Test
@@ -69,7 +68,7 @@ class RoomsPresenterTest {
         mRoomsPresenter!!.addNewRoom()
 
         // Then add room UI is shown
-        verify<View>(mRoomsView).showAddRoom()
+        verify<RoomsContract.View>(mRoomsView).showAddRoom()
     }
 
     @Test
@@ -81,7 +80,7 @@ class RoomsPresenterTest {
         mRoomsPresenter!!.openRoomDetails(requestedRoom)
 
         // Then room detail UI is shown
-        verify<View>(mRoomsView).showRoomDetailUi(any(String::class.java))
+        verify<RoomsContract.View>(mRoomsView).showRoomDetailUi(any(String::class.java))
     }
 
     companion object {

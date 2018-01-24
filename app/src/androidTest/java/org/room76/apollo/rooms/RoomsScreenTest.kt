@@ -106,7 +106,7 @@ class RoomsScreenTest {
 
         // Scroll rooms list to added room, by finding its description
         onView(withId(R.id.rooms_list)).perform(
-                scrollTo<ViewHolder>(hasDescendant(withText(newRoomDescription))))
+                scrollTo<RecyclerView.ViewHolder>(hasDescendant(withText(newRoomDescription))))
 
         // Verify room is displayed on screen
         onView(withItemText(newRoomDescription)).check(matches(isDisplayed()))

@@ -38,7 +38,7 @@ class InMemoryRoomsRepositoryTest {
      * perform further actions or assertions on them.
      */
     @Captor
-    private val mRoomsServiceCallbackCaptor: ArgumentCaptor<RoomsServiceApi.RoomsServiceCallback<*>>? = null
+    private val mRoomsServiceCallbackCaptor: ArgumentCaptor<RoomsServiceApi.RoomsServiceCallback<List<Room>>>? = null
 
     @Before
     fun setupRoomsRepository() {
@@ -57,23 +57,23 @@ class InMemoryRoomsRepositoryTest {
     fun getRooms_repositoryCachesAfterFirstApiCall() {
         // Given a setup Captor to capture callbacks
         // When two calls are issued to the rooms repository
-        twoLoadCallsToRepository(mLoadRoomsCallback)
+        twoLoadCallsToRepository(mLoadRoomsCallback!!)
 
         // Then rooms where only requested once from Service API
-        verify<RoomsServiceApiImpl>(mServiceApi).getAllRooms(any(RoomsServiceApi.RoomsServiceCallback<*>::class.java))
+        verify<RoomsServiceApiImpl>(mServiceApi).getAllRooms(any(RoomsServiceApi.RoomsServiceCallback::class.java))
     }
 
     @Test
     fun invalidateCache_DoesNotCallTheServiceApi() {
         // Given a setup Captor to capture callbacks
-        twoLoadCallsToRepository(mLoadRoomsCallback)
+        twoLoadCallsToRepository(mLoadRoomsCallback!!)
 
         // When data refresh is requested
         mRoomsRepository!!.refreshData()
-        mRoomsRepository!!.getRooms(mLoadRoomsCallback!!) // Third call to API
+        mRoomsRepository!!.getRooms(mLoadRoomsCallback) // Third call to API
 
         // The rooms where requested twice from the Service API (Caching on first and third call)
-        verify<RoomsServiceApiImpl>(mServiceApi, times(2)).getAllRooms(any(RoomsServiceApi.RoomsServiceCallback<*>::class.java))
+        verify<RoomsServiceApiImpl>(mServiceApi, times(2)).getAllRooms(any(RoomsServiceApi.RoomsServiceCallback::class.java))
     }
 
     @Test
@@ -82,7 +82,7 @@ class InMemoryRoomsRepositoryTest {
         mRoomsRepository!!.getRooms(mLoadRoomsCallback!!)
 
         // Then rooms are loaded from the service API
-        verify<RoomsServiceApiImpl>(mServiceApi).getAllRooms(any(RoomsServiceApi.RoomsServiceCallback<*>::class.java))
+        verify<RoomsServiceApiImpl>(mServiceApi).getAllRooms(any(RoomsServiceApi.RoomsServiceCallback::class.java))
     }
 
     @Test
@@ -103,7 +103,7 @@ class InMemoryRoomsRepositoryTest {
         mRoomsRepository!!.getRoom(ROOM_TITLE, mGetRoomCallback!!)
 
         // Then the room is loaded from the service API
-        verify<RoomsServiceApiImpl>(mServiceApi).getRoom(eq(ROOM_TITLE), any(RoomsServiceApi.RoomsServiceCallback<*>::class.java))
+        verify<RoomsServiceApiImpl>(mServiceApi).getRoom(eq(ROOM_TITLE), any(RoomsServiceApi.RoomsServiceCallback::class.java))
     }
 
     /**
@@ -126,7 +126,7 @@ class InMemoryRoomsRepositoryTest {
 
         private val ROOM_TITLE = "title"
 
-        private val ROOMS = ArrayList()
+        private val ROOMS = ArrayList<Room>()
     }
 
 }

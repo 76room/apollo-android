@@ -52,15 +52,15 @@ class RoomsDetailPresenterTest {
 
         // Then room is loaded from model, callback is captured and progress indicator is shown
         verify<RoomsRepository>(mRoomsRepository).getRoom(eq(room.id), mGetRoomCallbackCaptor!!.capture())
-        verify<View>(mRoomDetailView).setProgressIndicator(true)
+        verify<RoomDetailContract.View>(mRoomDetailView).setProgressIndicator(true)
 
         // When room is finally loaded
         mGetRoomCallbackCaptor.value.onRoomLoaded(room) // Trigger callback
 
         // Then progress indicator is hidden and title and description are shown in UI
-        verify<View>(mRoomDetailView).setProgressIndicator(false)
-        verify<View>(mRoomDetailView).showTitle(TITLE_TEST)
-        verify<View>(mRoomDetailView).showDescription(DESCRIPTION_TEST)
+        verify<RoomDetailContract.View>(mRoomDetailView).setProgressIndicator(false)
+        verify<RoomDetailContract.View>(mRoomDetailView).showTitle(TITLE_TEST)
+        verify<RoomDetailContract.View>(mRoomDetailView).showDescription(DESCRIPTION_TEST)
     }
 
     @Test
@@ -70,15 +70,15 @@ class RoomsDetailPresenterTest {
 
         // Then room with invalid id is attempted to load from model, callback is captured and
         // progress indicator is shown.
-        verify<View>(mRoomDetailView).setProgressIndicator(true)
+        verify<RoomDetailContract.View>(mRoomDetailView).setProgressIndicator(true)
         verify<RoomsRepository>(mRoomsRepository).getRoom(eq(INVALID_ID), mGetRoomCallbackCaptor!!.capture())
 
         // When room is finally loaded
         mGetRoomCallbackCaptor.value.onRoomLoaded(null) // Trigger callback
 
         // Then progress indicator is hidden and missing room UI is shown
-        verify<View>(mRoomDetailView).setProgressIndicator(false)
-        verify<View>(mRoomDetailView).showMissingRoom()
+        verify<RoomDetailContract.View>(mRoomDetailView).setProgressIndicator(false)
+        verify<RoomDetailContract.View>(mRoomDetailView).showMissingRoom()
     }
 
     companion object {
