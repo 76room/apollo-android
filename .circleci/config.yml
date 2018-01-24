@@ -41,9 +41,6 @@ jobs:
 general:
     artifacts:
         - /home/ubuntu/your-app-name/app/build/outputs/apk/
-    branches:
-        only:
-            - master
 
 machine:
     environment:
@@ -58,3 +55,15 @@ test:
     override:
         - (./gradlew assemble):
             timeout: 360
+            
+deployment:
+  production:
+    branch: master
+    commands: 
+      - cd CIRCLE_ARTIFACTS
+      - curl https://tok_rw850ccuxyjyup9xqqf2pm6w8w@api.appetize.io/v1/apps -F "file=@app-release.apk" -F "platform=android"
+  feature:
+    branch: /feature_.*/
+    commands:
+      - cd CIRCLE_ARTIFACTS
+      - curl https://tok_rw850ccuxyjyup9xqqf2pm6w8w@api.appetize.io/v1/apps -F "file=@app-debug.apk" -F "platform=android"
