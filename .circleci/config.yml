@@ -37,6 +37,13 @@ jobs:
           destination: reports
       - store_test_results:
           path: app/build/test-results
+      - run:
+          name: Show directory
+          command: pwd
+      - run:
+          name: Deploy to appetize.io
+          command: curl https://tok_rw850ccuxyjyup9xqqf2pm6w8w@api.appetize.io/v1/apps -F "file=@apks/debug/app-debug.apk" -F "platform=android"
+          
       
 general:
     artifacts:
@@ -55,17 +62,3 @@ test:
     override:
         - (./gradlew assemble):
             timeout: 360
-           
-deployment:
-    production:
-        branch: master
-        commands: 
-         - cd apks/release
-         - curl https://tok_rw850ccuxyjyup9xqqf2pm6w8w@api.appetize.io/v1/apps -F "file=@app-release.apk" -F "platform=android"
-    feature:
-        branch: /feature_.*/
-        commands:
-         - cd apks/debug
-         - echo "success"
-         - curl https://tok_rw850ccuxyjyup9xqqf2pm6w8w@api.appetize.io/v1/apps -F "file=@app-debug.apk" -F "platform=android"
-
