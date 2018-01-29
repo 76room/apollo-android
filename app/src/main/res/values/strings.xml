@@ -36,4 +36,6 @@
     <string name="log_in">Log in</string>
     <string name="email_hint">Enter email</string>
     <string name="password_hint">Enter password</string>
+
+    <string name="room_image_description">Room image</string>
 </resources>

@@ -9,8 +9,9 @@ import android.support.v4.util.ArrayMap;
 public final class RoomsServiceApiEndpoint {
 
     static {
-        DATA = new ArrayMap(2);
+        DATA = new ArrayMap(3);
         addRoom("Oh yes!", "I demand trial by Unit testing", null);
+        addRoom("Image Room", "Room with image for testing", "http://www.fonstola.ru/large/201604/230397.jpg");
         addRoom("Espresso", "UI Testing for Android", null);
     }
 
