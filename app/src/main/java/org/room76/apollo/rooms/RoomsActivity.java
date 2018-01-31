@@ -1,6 +1,7 @@
 package org.room76.apollo.rooms;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
@@ -13,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.room76.apollo.R;
 import org.room76.apollo.util.EspressoIdlingResource;
@@ -68,23 +70,31 @@ public class RoomsActivity extends AppCompatActivity {
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.find_music_navigation_menu_item:
-//                                startActivity(new Intent(RoomsActivity.this, StatisticsActivity.class));
-                                break;
-                            default:
-                                break;
-                        }
-                        // Close the navigation drawer when an item is selected.
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        return true;
-                    }
-                });
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.my_rooms_navigation_menu_item:
+                        Toast.makeText(getApplicationContext(), "My rooms", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.find_rooms_navigation_menu_item:
+                        Toast.makeText(getApplicationContext(), "Find rooms", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.find_music_navigation_menu_item:
+                        Toast.makeText(getApplicationContext(), "Find music", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.find_place_navigation_menu_item:
+                        Toast.makeText(getApplicationContext(), "Find place", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                // Close the navigation drawer when an item is selected.
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                return true;
+            }
+        });
     }
 
     @VisibleForTesting
