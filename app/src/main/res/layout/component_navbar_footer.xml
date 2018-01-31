@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    android:id="@+id/footer"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/footer_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_settings"
+            android:contentDescription="@string/navbar_settings" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="18dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="@string/navbar_settings" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/footer_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_feedback"
+            android:contentDescription="@string/navbar_feedback"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="18dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="@string/navbar_feedback" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/footer_sigh_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_signout"
+            android:contentDescription="@string/navbar_signout"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="18dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:text="@string/navbar_signout" />
+    </LinearLayout>
+</LinearLayout>

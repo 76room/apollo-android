@@ -1,6 +1,7 @@
 package org.room76.apollo.rooms;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
@@ -13,11 +14,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import org.room76.apollo.R;
 import org.room76.apollo.util.EspressoIdlingResource;
 
-public class RoomsActivity extends AppCompatActivity {
+public class RoomsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DrawerLayout mDrawerLayout;
 
@@ -31,16 +34,20 @@ public class RoomsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) {
+            ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         // Set up the navigation drawer.
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
+        mDrawerLayout.setStatusBarBackground(R.drawable.ic_drawer_background);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
-            setupDrawerContent(navigationView);
-        }
+        findViewById(R.id.footer_feedback).setOnClickListener(this);
+        findViewById(R.id.footer_settings).setOnClickListener(this);
+        findViewById(R.id.footer_sigh_out).setOnClickListener(this);
+        navigationView.setItemIconTintList(null);
+        setupDrawerContent(navigationView);
 
         if (null == savedInstanceState) {
             initFragment(RoomsFragment.newInstance());
@@ -67,27 +74,53 @@ public class RoomsActivity extends AppCompatActivity {
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.statistics_navigation_menu_item:
-//                                startActivity(new Intent(RoomsActivity.this, StatisticsActivity.class));
-                                break;
-                            default:
-                                break;
-                        }
-                        // Close the navigation drawer when an item is selected.
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        return true;
-                    }
-                });
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.my_rooms_navigation_menu_item:
+                        Toast.makeText(getApplicationContext(), "My rooms", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.find_rooms_navigation_menu_item:
+                        Toast.makeText(getApplicationContext(), "Find rooms", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.find_music_navigation_menu_item:
+                        Toast.makeText(getApplicationContext(), "Find music", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.find_place_navigation_menu_item:
+                        Toast.makeText(getApplicationContext(), "Find place", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                // Close the navigation drawer when an item is selected.
+                menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                return true;
+            }
+        });
     }
 
     @VisibleForTesting
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.footer_feedback:
+                Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.footer_settings:
+                Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.footer_sigh_out:
+                Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+        mDrawerLayout.closeDrawers();
     }
 }
