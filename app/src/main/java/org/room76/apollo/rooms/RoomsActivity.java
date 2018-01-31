@@ -31,16 +31,17 @@ public class RoomsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) {
+            ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         // Set up the navigation drawer.
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
+        mDrawerLayout.setStatusBarBackground(R.drawable.ic_drawer_background);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
-            setupDrawerContent(navigationView);
-        }
+        navigationView.setItemIconTintList(null);
+        setupDrawerContent(navigationView);
 
         if (null == savedInstanceState) {
             initFragment(RoomsFragment.newInstance());
@@ -72,7 +73,7 @@ public class RoomsActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-                            case R.id.statistics_navigation_menu_item:
+                            case R.id.find_music_navigation_menu_item:
 //                                startActivity(new Intent(RoomsActivity.this, StatisticsActivity.class));
                                 break;
                             default:
