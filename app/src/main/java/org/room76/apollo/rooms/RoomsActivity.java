@@ -14,12 +14,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import org.room76.apollo.R;
 import org.room76.apollo.util.EspressoIdlingResource;
 
-public class RoomsActivity extends AppCompatActivity {
+public class RoomsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DrawerLayout mDrawerLayout;
 
@@ -42,6 +43,9 @@ public class RoomsActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackground(R.drawable.ic_drawer_background);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        findViewById(R.id.footer_feedback).setOnClickListener(this);
+        findViewById(R.id.footer_settings).setOnClickListener(this);
+        findViewById(R.id.footer_sigh_out).setOnClickListener(this);
         navigationView.setItemIconTintList(null);
         setupDrawerContent(navigationView);
 
@@ -100,5 +104,23 @@ public class RoomsActivity extends AppCompatActivity {
     @VisibleForTesting
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.footer_feedback:
+                Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.footer_settings:
+                Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.footer_sigh_out:
+                Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+        mDrawerLayout.closeDrawers();
     }
 }
