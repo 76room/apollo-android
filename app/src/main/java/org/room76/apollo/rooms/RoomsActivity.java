@@ -41,7 +41,7 @@ public class RoomsActivity extends AppCompatActivity implements View.OnClickList
 
         // Set up the navigation drawer.
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setStatusBarBackground(R.drawable.ic_drawer_background);
+        mDrawerLayout.setStatusBarBackground(R.drawable.dr_drawer_background);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         findViewById(R.id.footer_feedback).setOnClickListener(this);
         findViewById(R.id.footer_settings).setOnClickListener(this);

@@ -6,6 +6,7 @@
     <color name="colorPrimaryLightest">#3f7178</color>
     <color name="colorPrimaryNear">#3d6c73</color>
     <color name="colorAccent">#53c1bd</color>
+    <color name="colorAccentTint">#2653c1bd</color>
     <color name="backgroundGradient">#267470</color>
     <color name="backgroundDrawerGradient">#2B3948</color>
     <color name="colorAccentLight">#ededec</color>

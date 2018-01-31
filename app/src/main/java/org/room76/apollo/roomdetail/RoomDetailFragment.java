@@ -53,9 +53,9 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_detail, container, false);
-        mDetailTitle = (TextView) root.findViewById(R.id.room_detail_title);
-        mDetailDescription = (TextView) root.findViewById(R.id.room_detail_description);
-        mDetailImage = (ImageView) root.findViewById(R.id.room_detail_image);
+        mDetailTitle = root.findViewById(R.id.room_detail_title);
+        mDetailDescription = root.findViewById(R.id.room_detail_description);
+        mDetailImage = root.findViewById(R.id.room_detail_image);
         return root;
     }
 
