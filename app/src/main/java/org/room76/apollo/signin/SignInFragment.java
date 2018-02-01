@@ -1,5 +1,6 @@
 package org.room76.apollo.signin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,12 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 import org.room76.apollo.R;
+import org.room76.apollo.rooms.RoomsActivity;
 
 public class SignInFragment extends Fragment implements SignInContract.View, View.OnClickListener {
 
     private SignInContract.UserActionsListener mActionsListener;
+
+    private LottieAnimationView mProgressGears;
 
     private View mProviderContainer;
     private View mLoginFormContainer;
@@ -20,7 +27,7 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
 
-    public static Fragment newInstance() {
+    public static SignInFragment newInstance() {
         return new SignInFragment();
     }
 
@@ -39,6 +46,7 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
         mEmailEditText = root.findViewById(R.id.edit_email);
         mPasswordEditText = root.findViewById(R.id.edit_password);
 
+        mProgressGears = root.findViewById(R.id.animation_view);
         return root;
     }
 
@@ -51,7 +59,7 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
 
     @Override
     public void setProgressIndicator(boolean active) {
-
+        mProgressGears.setVisibility(active? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -72,6 +80,26 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
     @Override
     public void hideLoginForm() {
         mLoginFormContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showRegistrationForm() {
+
+    }
+
+    @Override
+    public void hideRegistrationForm() {
+
+    }
+
+    @Override
+    public void navigateToMainPage() {
+        startActivity(new Intent(getContext(), RoomsActivity.class));
+    }
+
+    @Override
+    public void showError(String exception) {
+        Toast.makeText(getContext(), exception, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -106,6 +134,16 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
                 break;
             default:
                 break;
+        }
+    }
+
+    public boolean handleQuery(int intent) {
+        if (intent == SignInActivity.SIGN_OUT) {
+            mActionsListener.signOut();
+            return true;
+        } else{
+            showProviderSelector();
+            return false;
         }
     }
 }

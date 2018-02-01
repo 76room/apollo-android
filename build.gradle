@@ -38,6 +38,7 @@ ext {
     supportLibraryVersion = '25.3.1'
     constrainLayoutVersion = '1.0.2'
     glideVersion = '3.6.1'
+    lottieVersion = '2.5.0-rc1'
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
     powerMockito = '1.6.2'

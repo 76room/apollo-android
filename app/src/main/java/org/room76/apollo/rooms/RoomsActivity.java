@@ -1,5 +1,6 @@
 package org.room76.apollo.rooms;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -13,25 +14,30 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.room76.apollo.R;
+import org.room76.apollo.signin.SignInActivity;
 import org.room76.apollo.util.EspressoIdlingResource;
 
 public class RoomsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DrawerLayout mDrawerLayout;
+    private ImageView mUserImage;
+    private TextView mUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rooms);
 
-
         // Set up the toolbar.
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
@@ -40,18 +46,23 @@ public class RoomsActivity extends AppCompatActivity implements View.OnClickList
         }
 
         // Set up the navigation drawer.
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackground(R.drawable.dr_drawer_background);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         findViewById(R.id.footer_feedback).setOnClickListener(this);
         findViewById(R.id.footer_settings).setOnClickListener(this);
         findViewById(R.id.footer_sigh_out).setOnClickListener(this);
+        View headerview = navigationView.getHeaderView(0);
+        mUserEmail = headerview.findViewById(R.id.user_email);
+        mUserImage = headerview.findViewById(R.id.user_image);
         navigationView.setItemIconTintList(null);
         setupDrawerContent(navigationView);
 
         if (null == savedInstanceState) {
             initFragment(RoomsFragment.newInstance());
         }
+        mUserEmail.setText("Please login in your account");
+        mUserImage.setOnClickListener(this);
     }
 
     private void initFragment(Fragment roomsFragment) {
@@ -109,6 +120,9 @@ public class RoomsActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.user_image:
+                startActivity(new Intent(this, SignInActivity.class));
+                break;
             case R.id.footer_feedback:
                 Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
                 break;
@@ -116,11 +130,20 @@ public class RoomsActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.footer_sigh_out:
-                Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
+                startActivityForResult(new Intent(this, SignInActivity.class), SignInActivity.SIGN_OUT);
                 break;
             default:
                 break;
         }
         mDrawerLayout.closeDrawers();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+       if (requestCode == RESULT_OK && requestCode == SignInActivity.SIGN_OUT) {
+           Log.i("result","user signed out");
+           mUserEmail.setText("Please login in your account");
+           mUserImage.setImageDrawable(getDrawable(R.drawable.ic_default_user_image));
+       }
     }
 }
