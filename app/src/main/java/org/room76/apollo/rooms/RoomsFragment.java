@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -185,7 +186,7 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
             LayoutInflater inflater = LayoutInflater.from(context.get());
             if (viewType == ITEM_TYPE_WITHOUT_ROOM_IMAGE) {
                 View roomView = inflater.inflate(R.layout.item_room_no_image, parent, false);
-                return new WithoutImageViewHolder(roomView, mItemListener);
+                return new NoImageViewHolder(roomView, mItemListener);
             } else {
                 View roomView = inflater.inflate(R.layout.item_room_full, parent, false);
                 return new FullViewHolder(roomView, mItemListener);
@@ -199,23 +200,26 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
             Room room = mRooms.get(position);
 
             viewHolder.title.setText(room.getTitle());
-            viewHolder.description.setText(room.getDescription());
 
-            if (itemType == ITEM_TYPE_FULL) {
+            if (room.getAuthor().getProfilePhotoUrl() != null) {
                 // This app uses Glide for image loading
-//                Glide.with(this)
-//                        .load(imageUrl)
-//                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                        .centerCrop()
-//                        .into(new GlideDrawableImageViewTarget(mDetailImage) {
-//                            @Override
-//                            public void onResourceReady(GlideDrawable resource,
-//                                                        GlideAnimation<? super GlideDrawable> animation) {
-//                                super.onResourceReady(resource, animation);
-//                                EspressoIdlingResource.decrement(); // App is idle.
-//                            }
-//                        });
-                Glide.with(viewHolder.description.getContext()).load(room.getImageUrl()).into(((FullViewHolder) viewHolder).roomImage);
+                Glide.with(context.get())
+                        .load(room.getAuthor().getProfilePhotoUrl())
+                        .centerCrop()
+                        .into(viewHolder.authorImage);
+            }
+
+
+            if (itemType == ITEM_TYPE_FULL && context.get() != null) {
+                Glide.with(context.get()).load(room.getImageUrl()).into(((FullViewHolder) viewHolder).roomImage);
+
+                if (room.isOpen()) {
+                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_door_white_24dp);
+                } else {
+                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_lock_outline_white_24dp);
+                }
+            } else {
+                ((NoImageViewHolder)viewHolder).description.setText(room.getDescription());
             }
         }
 
@@ -249,7 +253,7 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             public TextView title;
-            public TextView description;
+            public ImageButton authorImage;
 
             private RoomItemListener mItemListener;
 
@@ -257,7 +261,7 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
                 super(itemView);
                 mItemListener = listener;
                 title = itemView.findViewById(R.id.room_detail_title);
-                description = itemView.findViewById(R.id.room_detail_description);
+                authorImage = itemView.findViewById(R.id.room_author_image);
                 itemView.setOnClickListener(this);
             }
 
@@ -269,19 +273,23 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
             }
         }
 
-        public class WithoutImageViewHolder extends ViewHolder {
+        public class NoImageViewHolder extends ViewHolder {
+            public TextView description;
 
-            public WithoutImageViewHolder(View itemView, RoomItemListener listener) {
+            public NoImageViewHolder(View itemView, RoomItemListener listener) {
                 super(itemView, listener);
+                description = itemView.findViewById(R.id.room_detail_description);
             }
         }
 
         public class FullViewHolder extends ViewHolder {
             public ImageView roomImage;
+            public ImageView isOpen;
 
             public FullViewHolder(View itemView, RoomItemListener listener) {
                 super(itemView, listener);
                 roomImage = itemView.findViewById(R.id.room_detail_image);
+                isOpen = itemView.findViewById(R.id.room_is_open);
             }
         }
 

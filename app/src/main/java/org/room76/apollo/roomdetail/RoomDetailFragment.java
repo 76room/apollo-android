@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import org.room76.apollo.R;
+import org.room76.apollo.model.User;
 import org.room76.apollo.util.EspressoIdlingResource;
 import org.room76.apollo.util.Injection;
 
@@ -33,6 +35,11 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     private TextView mDetailDescription;
 
     private ImageView mDetailImage;
+
+    private ImageView mIsOpen;
+
+    private ImageButton mAuthorImage;
+
 
     public static RoomDetailFragment newInstance(String roomId) {
         Bundle arguments = new Bundle();
@@ -56,6 +63,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         mDetailTitle = root.findViewById(R.id.room_detail_title);
         mDetailDescription = root.findViewById(R.id.room_detail_description);
         mDetailImage = root.findViewById(R.id.room_detail_image);
+        mIsOpen = root.findViewById(R.id.room_is_open);
+        mAuthorImage = root.findViewById(R.id.room_author_image);
         return root;
     }
 
@@ -88,6 +97,39 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     public void showDescription(String description) {
         mDetailDescription.setVisibility(View.VISIBLE);
         mDetailDescription.setText(description);
+    }
+
+    @Override
+    public void showAuthor(User author) {
+        mAuthorImage.setVisibility(View.VISIBLE);
+
+        if (author.getProfilePhotoUrl() != null) {
+            // This app uses Glide for image loading
+            Glide.with(this)
+                    .load(author.getProfilePhotoUrl())
+                    .centerCrop()
+                    .into(mAuthorImage);
+        }
+    }
+
+    @Override
+    public void hideAuthor() {
+        mAuthorImage.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showIsOpen(boolean isOpen) {
+        mIsOpen.setVisibility(View.VISIBLE);
+        if (isOpen) {
+            mIsOpen.setBackgroundResource(R.drawable.ic_door_white_24dp);
+        } else {
+            mIsOpen.setBackgroundResource(R.drawable.ic_lock_outline_white_24dp);
+        }
+    }
+
+    @Override
+    public void hideIsOpen() {
+        mIsOpen.setVisibility(View.GONE);
     }
 
     @Override
