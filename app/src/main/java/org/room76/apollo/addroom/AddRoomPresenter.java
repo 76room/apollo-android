@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.room76.apollo.model.Room;
 import org.room76.apollo.model.RoomsRepository;
+import org.room76.apollo.model.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +36,11 @@ public class AddRoomPresenter implements AddRoomContract.UserActionsListener {
         if (mImageFile.exists()) {
             imageUrl = mImageFile.getPath();
         }
-        Room newRoom = new Room(title, description, imageUrl);
+        // TODO add author and isOpen filling
+        User author = null;
+        boolean isOpen = true;
+
+        Room newRoom = new Room(author, title, description, isOpen, imageUrl);
         if (newRoom.isEmpty()) {
             mAddRoomView.showEmptyRoomError();
         } else {
