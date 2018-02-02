@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "938925467677",
+    "firebase_url": "https://apollo-music-firebase.firebaseio.com",
+    "project_id": "apollo-music-firebase",
+    "storage_bucket": "apollo-music-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938925467677:android:99dcc08ed5c3b42b",
+        "android_client_info": {
+          "package_name": "org.room76.apollo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "938925467677-m5055rkc2avn9i9fh2gnuon6nkog1n99.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB44R18CMvdzVt8a2fiNRbe9fXeNN7kt3U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
