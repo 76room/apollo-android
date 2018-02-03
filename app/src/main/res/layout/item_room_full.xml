@@ -42,7 +42,7 @@
                 android:layout_margin="16dp"
                 android:background="@null"
                 android:contentDescription="@string/is_open_description"
-                tools:background="@drawable/ic_lock_outline_white_24dp" />
+                tools:background="@drawable/ic_lock_outline" />
         </FrameLayout>
 
         <LinearLayout
@@ -61,17 +61,17 @@
 
             <ImageButton
                 style="@style/IconStyle"
-                android:background="@drawable/ic_map_marker_white_24dp"
+                android:background="@drawable/ic_map_marker"
                 android:contentDescription="@string/location_icon_description" />
 
             <ImageButton
                 style="@style/IconStyle"
-                android:background="@drawable/ic_heart_grey600_24dp"
+                android:background="@drawable/ic_heart"
                 android:contentDescription="@string/heart_icon_description" />
 
             <ImageButton
                 style="@style/IconStyle"
-                android:background="@drawable/ic_share_variant_grey600_24dp"
+                android:background="@drawable/ic_share_variant"
                 android:contentDescription="@string/share_icon_description" />
         </LinearLayout>
 
