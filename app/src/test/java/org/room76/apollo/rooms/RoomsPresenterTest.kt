@@ -75,7 +75,7 @@ class RoomsPresenterTest {
     @Test
     fun clickOnRoom_ShowsDetailUi() {
         // Given a stubbed room
-        val requestedRoom = Room(FirebaseUserMock("User"), "Details Requested", "For this room", true)
+        val requestedRoom = Room(FirebaseUserMock("User"), "Details Requested", "For this room", true, mIsEmpty)
 
         // When open room details is requested
         mRoomsPresenter!!.openRoomDetails(requestedRoom)
@@ -89,8 +89,8 @@ class RoomsPresenterTest {
         private val ROOMS = ArrayList<Room>()
 
         init {
-            ROOMS.add(Room(FirebaseUserMock("User"),"Title1", "Description1", true))
-            ROOMS.add(Room(FirebaseUserMock("User"),"Title2", "Description2", true))
+            ROOMS.add(Room(FirebaseUserMock("User"), "Title1", "Description1", true, mIsEmpty))
+            ROOMS.add(Room(FirebaseUserMock("User"), "Title2", "Description2", true, mIsEmpty))
         }
 
         private val EMPTY_ROOMS = ArrayList<Room>(0)

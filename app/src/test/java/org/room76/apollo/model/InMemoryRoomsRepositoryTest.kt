@@ -46,8 +46,8 @@ class InMemoryRoomsRepositoryTest {
         // inject the mocks in the test the initMocks method needs to be called.
         MockitoAnnotations.initMocks(this)
 
-        ROOMS.add(Room(FirebaseUserMock("User"),"Title1", "Description1", true))
-        ROOMS.add(Room(FirebaseUserMock("User"),"Title2", "Description2", true))
+        ROOMS.add(Room(FirebaseUserMock("User"), "Title1", "Description1", true, mIsEmpty))
+        ROOMS.add(Room(FirebaseUserMock("User"), "Title2", "Description2", true, mIsEmpty))
 
         // Get a reference to the class under test
         mRoomsRepository = InMemoryRoomsRepository(mServiceApi!!)
@@ -88,7 +88,7 @@ class InMemoryRoomsRepositoryTest {
     @Test
     fun saveRoom_savesRoomToServiceAPIAndInvalidatesCache() {
         // Given a stub room with title and description
-        val newRoom = Room(FirebaseUserMock("User"), ROOM_TITLE, "Some Room Description", true)
+        val newRoom = Room(FirebaseUserMock("User"), ROOM_TITLE, "Some Room Description", true, mIsEmpty)
 
         // When a room is saved to the rooms repository
         mRoomsRepository!!.saveRoom(newRoom)

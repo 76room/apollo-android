@@ -54,6 +54,7 @@ dependencies {
 
     implementation "com.google.firebase:firebase-core:$rootProject.firebaseVersion"
     implementation "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
+    implementation "com.google.firebase:firebase-database:$rootProject.firebaseVersion"
     implementation "com.google.android.gms:play-services-auth:$rootProject.firebaseVersion"
 
     // Dependencies for local unit tests

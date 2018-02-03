@@ -46,7 +46,7 @@ class RoomsDetailPresenterTest {
     @Test
     fun getRoomFromRepositoryAndLoadIntoView() {
         // Given an initialized RoomDetailPresenter with stubbed room
-        val room = Room(FirebaseUserMock("User"),TITLE_TEST, DESCRIPTION_TEST, true)
+        val room = Room(FirebaseUserMock("User"), TITLE_TEST, DESCRIPTION_TEST, true, mIsEmpty)
 
         // When rooms presenter is asked to open a room
         mRoomsDetailsPresenter!!.openRoom(room.id)

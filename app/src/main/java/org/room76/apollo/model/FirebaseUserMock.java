@@ -19,8 +19,12 @@ import java.util.List;
 
 public class FirebaseUserMock extends FirebaseUser {
 
-    private final String mName;
-    private final Uri mPhotoUrl;
+    private String mName;
+    private Uri mPhotoUrl;
+
+
+    public FirebaseUserMock() {
+    }
 
     public FirebaseUserMock(String name) {
         this.mName = name;
