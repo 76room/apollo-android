@@ -3,6 +3,7 @@
     <string name="app_name">Apollo</string>
     <string name="room_header">Room</string>
     <string name="add_room">New Room</string>
+
     <string name="title_hint">Enter title here.</string>
     <string name="description_hint">Enter description here.</string>
     <string name="empty_room_message">Room cannot be empty</string>
@@ -17,7 +18,7 @@
     <!--navbar-->
     <string name="navbar_my_rooms">My rooms</string>
     <string name="navbar_find_room">Find room</string>
-    <string name="navbar_find_music">Find music</string>
+    <string name="navbar_my_music">My music</string>
     <string name="navbar_find_place">Find place</string>
 
     <!--navbar-footer-->
