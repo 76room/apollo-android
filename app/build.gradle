@@ -30,6 +30,10 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+    
+    lintOptions {
+          abortOnError false
+    }
 }
 
 dependencies {
@@ -43,6 +47,11 @@ dependencies {
     implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
+    implementation "com.airbnb.android:lottie:$rootProject.ext.lottieVersion"
+
+    implementation "com.google.firebase:firebase-core:$rootProject.firebaseVersion"
+    implementation "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
+    implementation "com.google.android.gms:play-services-auth:$rootProject.firebaseVersion"
 
     // Dependencies for local unit tests
     testImplementation "junit:junit:$rootProject.ext.junitVersion"
@@ -60,3 +69,5 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
 }
+
+apply plugin: 'com.google.gms.google-services'
