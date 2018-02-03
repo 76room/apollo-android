@@ -109,6 +109,7 @@
             android:layout_height="300dp"
             android:orientation="vertical"
             android:nestedScrollingEnabled="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
         <LinearLayout
