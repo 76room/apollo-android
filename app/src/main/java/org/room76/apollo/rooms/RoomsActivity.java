@@ -21,8 +21,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseUser;
+
 import org.room76.apollo.R;
 import org.room76.apollo.signin.SignInActivity;
+import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.EspressoIdlingResource;
 
 public class RoomsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -53,6 +57,7 @@ public class RoomsActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.footer_settings).setOnClickListener(this);
         findViewById(R.id.footer_sigh_out).setOnClickListener(this);
         View headerview = navigationView.getHeaderView(0);
+        headerview.setOnClickListener(this);
         mUserEmail = headerview.findViewById(R.id.user_email);
         mUserImage = headerview.findViewById(R.id.user_image);
         navigationView.setItemIconTintList(null);
@@ -61,8 +66,12 @@ public class RoomsActivity extends AppCompatActivity implements View.OnClickList
         if (null == savedInstanceState) {
             initFragment(RoomsFragment.newInstance());
         }
-        mUserEmail.setText("Please login in your account");
-        mUserImage.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupUserData();
     }
 
     private void initFragment(Fragment roomsFragment) {
@@ -119,18 +128,24 @@ public class RoomsActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.user_image:
-                startActivity(new Intent(this, SignInActivity.class));
+        switch (view.getId()) {
+            case R.id.header:
+                if (SignInState.getInstance().getUser() == null) {
+                    startActivityForResult(new Intent(this, SignInActivity.class), SignInActivity.SIGN_IN);
+                }
                 break;
             case R.id.footer_feedback:
-                Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "footer click", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.footer_settings:
-                Toast.makeText(getApplicationContext(),"footer click", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "footer click", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.footer_sigh_out:
-                startActivityForResult(new Intent(this, SignInActivity.class), SignInActivity.SIGN_OUT);
+                if (SignInState.getInstance().getUser() != null) {
+                    Intent intent = new Intent(this, SignInActivity.class);
+                    intent.setAction(String.valueOf(SignInActivity.SIGN_OUT));
+                    startActivityForResult(intent, SignInActivity.SIGN_OUT);
+                }
                 break;
             default:
                 break;
@@ -140,10 +155,25 @@ public class RoomsActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       if (requestCode == RESULT_OK && requestCode == SignInActivity.SIGN_OUT) {
-           Log.i("result","user signed out");
-           mUserEmail.setText("Please login in your account");
-           mUserImage.setImageDrawable(getDrawable(R.drawable.ic_default_user_image));
-       }
+        if (requestCode == RESULT_OK && requestCode == SignInActivity.SIGN_OUT) {
+            setupUserData();
+        }
+    }
+
+    private void setupUserData() {
+        if (SignInState.getInstance().getUser() == null) {
+            mUserEmail.setText("Please login in your account");
+            mUserImage.setImageDrawable(getDrawable(R.drawable.ic_default_user_image));
+        } else if (SignInState.getInstance().getUser() != null) {
+            FirebaseUser user = SignInState.getInstance().getUser();
+            mUserEmail.setText(user.getDisplayName() == null || user.getDisplayName().isEmpty()
+                    ? user.getEmail() : user.getDisplayName());
+            Glide.with(getApplicationContext())
+                    .load(user.getPhotoUrl())
+                    .error(R.drawable.ic_default_user_image)
+                    .override(100, 100)
+                    .centerCrop()
+                    .into(mUserImage);
+        }
     }
 }

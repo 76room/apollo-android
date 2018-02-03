@@ -11,11 +11,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.R;
 import org.room76.apollo.rooms.RoomsActivity;
 
+import static android.app.Activity.RESULT_OK;
+
 public class SignInFragment extends Fragment implements SignInContract.View, View.OnClickListener {
+    private static final int RC_SIGN_IN = 100;
 
     private SignInContract.UserActionsListener mActionsListener;
 
@@ -36,6 +46,9 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_sign_in, container, false);
+        setRetainInstance(true);
+        mActionsListener = new SignInPresenter(this);
+
         mProviderContainer = root.findViewById(R.id.select_provider_container);
         root.findViewById(R.id.email).setOnClickListener(this);
         root.findViewById(R.id.google).setOnClickListener(this);
@@ -51,15 +64,8 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setRetainInstance(true);
-        mActionsListener = new SignInPresenter(this);
-    }
-
-    @Override
     public void setProgressIndicator(boolean active) {
-        mProgressGears.setVisibility(active? View.VISIBLE : View.GONE);
+        mProgressGears.setVisibility(active ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -93,8 +99,12 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
     }
 
     @Override
-    public void navigateToMainPage() {
-        startActivity(new Intent(getContext(), RoomsActivity.class));
+    public void navigateToMainPage(FirebaseUser user) {
+        SignInState.getInstance().setUser(user);
+        if (getActivity() != null) {
+            getActivity().setResult(RESULT_OK);
+            getActivity().finish();
+        }
     }
 
     @Override
@@ -118,32 +128,53 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.email:
-                if (mActionsListener.checkRegistrated()) {
-                    hideProviderSelector();
-                    showLoginForm();
-                } else {
-                    hideProviderSelector();
-                }
+                setProgressIndicator(true);
+                hideProviderSelector();
+                showLoginForm();
+                setProgressIndicator(false);
                 break;
             case R.id.google:
+                setProgressIndicator(true);
+                Intent intent = buildGoogleClient().getSignInIntent();
+                startActivityForResult(intent, RC_SIGN_IN);
                 break;
             case R.id.facebook:
                 break;
             case R.id.next:
-                mActionsListener.signInWithEmail(mEmailEditText.getText().toString(),mPasswordEditText.getText().toString());
+                mActionsListener.signInWithEmail(mEmailEditText.getText().toString(), mPasswordEditText.getText().toString());
                 break;
             default:
                 break;
         }
     }
 
-    public boolean handleQuery(int intent) {
-        if (intent == SignInActivity.SIGN_OUT) {
+    public void handleSignOut() {
+        if (mActionsListener != null) {
             mActionsListener.signOut();
-            return true;
-        } else{
-            showProviderSelector();
-            return false;
+            getActivity().setResult(RESULT_OK);
+            getActivity().finish();
+        }
+    }
+
+    private GoogleSignInClient buildGoogleClient() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+        return mGoogleSignInClient;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                mActionsListener.signInWithGoogle(account);
+            } catch (ApiException e) {
+                showError("signInResult:failed code=" + e.getStatusCode());
+            }
         }
     }
 }

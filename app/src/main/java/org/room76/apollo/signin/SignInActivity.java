@@ -13,7 +13,6 @@ import org.room76.apollo.util.EspressoIdlingResource;
 
 public class SignInActivity extends AppCompatActivity {
 
-    public static String SIGN_IN_OPTION = "sign in";
     public static int SIGN_OUT = 0;
     public static int SIGN_IN = 1;
 
@@ -27,11 +26,15 @@ public class SignInActivity extends AppCompatActivity {
             mFragment = SignInFragment.newInstance();
             initFragment(mFragment);
         }
-        if (getIntent().getExtras() != null) {
-            int intent = getIntent().getExtras().getInt(SIGN_IN_OPTION);
-            if (mFragment.handleQuery(intent)) {
-                setResult(RESULT_OK);
-                finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (getIntent().getAction() != null) {
+            String intent = getIntent().getAction();
+            if (intent.equals(String.valueOf(SignInActivity.SIGN_OUT))) {
+                mFragment.handleSignOut();
             }
         }
     }
