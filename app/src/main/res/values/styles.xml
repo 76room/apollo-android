@@ -29,14 +29,14 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-<<<<<<< HEAD
     <style name="SignInButtonContainer" parent="android:Widget">
         <item name="android:layout_width">200dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:background">@drawable/dr_rounded_button</item>
         <item name="android:orientation">horizontal</item>
-=======
+    </style>
+
     <style name="PrimaryTextStyle">
         <item name="android:typeface">monospace</item>
         <item name="android:textColor">@android:color/white</item>
@@ -54,7 +54,6 @@
         <item name="android:layout_height">24dp</item>
         <item name="android:layout_marginLeft">6dp</item>
         <item name="android:layout_marginRight">6dp</item>
->>>>>>> Full room item UI added
     </style>
 
 </resources>

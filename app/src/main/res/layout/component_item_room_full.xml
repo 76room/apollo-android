@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="244dp"
-    android:background="@color/background"
+    android:background="@color/colorPrimary"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
+        android:background="@color/colorPrimary"
         android:orientation="vertical">
 
         <FrameLayout

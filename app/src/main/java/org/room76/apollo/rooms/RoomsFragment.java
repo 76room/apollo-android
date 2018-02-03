@@ -185,10 +185,10 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
             context = new WeakReference<>(parent.getContext());
             LayoutInflater inflater = LayoutInflater.from(context.get());
             if (viewType == ITEM_TYPE_WITHOUT_ROOM_IMAGE) {
-                View roomView = inflater.inflate(R.layout.item_room_no_image, parent, false);
+                View roomView = inflater.inflate(R.layout.component_item_room_no_image, parent, false);
                 return new NoImageViewHolder(roomView, mItemListener);
             } else {
-                View roomView = inflater.inflate(R.layout.item_room_full, parent, false);
+                View roomView = inflater.inflate(R.layout.component_item_room_full, parent, false);
                 return new FullViewHolder(roomView, mItemListener);
             }
         }
@@ -201,10 +201,10 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
             viewHolder.title.setText(room.getTitle());
 
-            if (room.getAuthor().getProfilePhotoUrl() != null) {
+            if (room.getAuthor() != null && room.getAuthor().getPhotoUrl() != null) {
                 // This app uses Glide for image loading
                 Glide.with(context.get())
-                        .load(room.getAuthor().getProfilePhotoUrl())
+                        .load(room.getAuthor().getPhotoUrl())
                         .centerCrop()
                         .into(viewHolder.authorImage);
             }
@@ -214,9 +214,9 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
                 Glide.with(context.get()).load(room.getImageUrl()).into(((FullViewHolder) viewHolder).roomImage);
 
                 if (room.isOpen()) {
-                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_door_white_24dp);
+                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_door);
                 } else {
-                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_lock_outline_white_24dp);
+                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_lock_outline);
                 }
             } else {
                 ((NoImageViewHolder)viewHolder).description.setText(room.getDescription());

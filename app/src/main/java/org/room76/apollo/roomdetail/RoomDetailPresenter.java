@@ -3,9 +3,10 @@ package org.room76.apollo.roomdetail;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import org.room76.apollo.model.Room;
 import org.room76.apollo.model.RoomsRepository;
-import org.room76.apollo.model.User;
 
 /**
  * Listens to user actions from the UI ({@link RoomDetailFragment}), retrieves the data and updates
@@ -48,7 +49,7 @@ public class RoomDetailPresenter implements RoomDetailContract.UserActionsListen
         String title = room.getTitle();
         String description = room.getDescription();
         String imageUrl = room.getImageUrl();
-        User author = room.getAuthor();
+        FirebaseUser author = room.getAuthor();
         boolean isOpen = room.isOpen();
 
         if (author != null) {

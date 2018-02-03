@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="85dp"
-    android:background="@color/background"
+    android:background="@color/colorPrimary"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:background="@color/background"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
         <ImageButton
@@ -41,6 +41,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/SecondaryTextStyle"
+                android:maxLines="1"
+                android:ellipsize="end"
                 tools:text="Room description" />
         </LinearLayout>
 

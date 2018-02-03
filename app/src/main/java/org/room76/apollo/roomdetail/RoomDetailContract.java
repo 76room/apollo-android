@@ -2,7 +2,7 @@ package org.room76.apollo.roomdetail;
 
 import android.support.annotation.Nullable;
 
-import org.room76.apollo.model.User;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -28,7 +28,7 @@ public interface RoomDetailContract {
 
         void showDescription(String description);
 
-        void showAuthor(User author);
+        void showAuthor(FirebaseUser author);
 
         void hideAuthor();
 

@@ -15,9 +15,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.R;
-import org.room76.apollo.model.User;
 import org.room76.apollo.util.EspressoIdlingResource;
 import org.room76.apollo.util.Injection;
 
@@ -100,13 +100,13 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     }
 
     @Override
-    public void showAuthor(User author) {
+    public void showAuthor(FirebaseUser author) {
         mAuthorImage.setVisibility(View.VISIBLE);
 
-        if (author.getProfilePhotoUrl() != null) {
+        if (author.getPhotoUrl() != null) {
             // This app uses Glide for image loading
             Glide.with(this)
-                    .load(author.getProfilePhotoUrl())
+                    .load(author.getPhotoUrl())
                     .centerCrop()
                     .into(mAuthorImage);
         }
@@ -121,9 +121,9 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     public void showIsOpen(boolean isOpen) {
         mIsOpen.setVisibility(View.VISIBLE);
         if (isOpen) {
-            mIsOpen.setBackgroundResource(R.drawable.ic_door_white_24dp);
+            mIsOpen.setBackgroundResource(R.drawable.ic_door);
         } else {
-            mIsOpen.setBackgroundResource(R.drawable.ic_lock_outline_white_24dp);
+            mIsOpen.setBackgroundResource(R.drawable.ic_lock_outline);
         }
     }
 
