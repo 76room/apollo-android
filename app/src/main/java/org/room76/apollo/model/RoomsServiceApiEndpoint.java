@@ -23,15 +23,11 @@ public final class RoomsServiceApiEndpoint {
 
     private static void addRoom(FirebaseUser author, String title, String description, boolean isOpen, String imageUrl) {
         Room newRoom = new Room(author, title, description, isOpen, imageUrl);
-        List<String> tracks = new ArrayList<>();
-        tracks.add("track 1");
-        tracks.add("track 2");
-        tracks.add("track 3");
-        tracks.add("track 5");
-        tracks.add("track 6");
-        tracks.add("track 7");
-        tracks.add("track 8");
-        tracks.add("track 9");
+        List<Track> tracks = new ArrayList<>();
+        tracks.add(new Track("track1", "Nirvana", 200000, "http://test"));
+        tracks.add(new Track("track2", "Nirvana", 400000, "http://test"));
+        tracks.add(new Track("track3", "Nirvana", 50000, "http://test"));
+        tracks.add(new Track("track4", "Nirvana", 60000, "http://test"));
         List<FirebaseUser> users = new ArrayList<>();
         users.add(author);
         newRoom.setTracks(tracks);

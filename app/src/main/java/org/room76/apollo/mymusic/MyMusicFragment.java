@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.room76.apollo.util.Utils.convertTime;
+
 
 public class MyMusicFragment extends Fragment implements MyMusicContract.View {
 
@@ -242,11 +244,6 @@ public class MyMusicFragment extends Fragment implements MyMusicContract.View {
             ++mCurrentTrackIndex;
         }
         playTrack();
-    }
-
-    private static String convertTime(int time) {
-        return String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(time),
-                TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)));
     }
 
     private static class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder> {

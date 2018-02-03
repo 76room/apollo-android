@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import org.room76.apollo.model.Track;
+
 import java.util.List;
 
 /**
@@ -40,7 +42,7 @@ public interface RoomDetailContract {
 
         void populateUserView(List<FirebaseUser> users);
 
-        void populateTrackList(List<String> tracks);
+        void populateTrackList(List<Track> tracks);
     }
 
     interface UserActionsListener {

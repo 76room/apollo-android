@@ -30,7 +30,7 @@ public final class Room {
 
     private List<FirebaseUser> mUsers = new ArrayList<>();
 
-    private List<String> mTracks = new ArrayList<>();
+    private List<Track> mTracks = new ArrayList<>();
 
 
     public Room(@Nullable FirebaseUser author, @Nullable String title, @Nullable String description, boolean isOpen) {
@@ -87,11 +87,11 @@ public final class Room {
         this.mUsers = mUsers;
     }
 
-    public List<String> getTracks() {
+    public List<Track> getTracks() {
         return mTracks;
     }
 
-    public void setTracks(List<String> mTracks) {
+    public void setTracks(List<Track> mTracks) {
         this.mTracks = mTracks;
     }
 }

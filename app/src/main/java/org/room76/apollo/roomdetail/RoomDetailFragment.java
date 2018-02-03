@@ -25,10 +25,13 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.R;
+import org.room76.apollo.model.Track;
 import org.room76.apollo.util.EspressoIdlingResource;
 import org.room76.apollo.util.Injection;
 
 import java.util.List;
+
+import static org.room76.apollo.util.Utils.convertTime;
 
 /**
  * Main UI for the room detail screen.
@@ -56,6 +59,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     private View mProgressBar;
 
     private ImageView mIsOpen;
+
+    private List<Track> mTracks;
 
 //    private ImageButton mAuthorImage;
 
@@ -163,7 +168,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     }
 
     @Override
-    public void populateTrackList(List<String> tracks) {
+    public void populateTrackList(List<Track> tracks) {
+        mTracks = tracks;
         mTrackAdapter = new TrackAdapter(tracks);
         mTracksRecyclerView.setAdapter(mTrackAdapter);
     }
@@ -212,9 +218,9 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (position == ItemTouchHelper.LEFT) {
-
+            mTracks.get(viewHolder.getAdapterPosition()).dislike();
         } else if (position == ItemTouchHelper.RIGHT) {
-
+            mTracks.get(viewHolder.getAdapterPosition()).like();
         }
         mTrackAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
 
@@ -283,11 +289,9 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         }
     }
 
-    public static class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
+    public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
 
-        private List<String> mTracks;
-
-        public TrackAdapter(List<String> users) {
+        public TrackAdapter(List<Track> users) {
             setList(users);
         }
 
@@ -296,25 +300,24 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             Context context = parent.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
             View roomView = inflater.inflate(R.layout.component_track_item, parent, false);
-
             return new TrackViewHolder(roomView);
         }
 
         @Override
         public void onBindViewHolder(TrackViewHolder viewHolder, int position) {
-            String user = mTracks.get(position);
+            Track track = mTracks.get(position);
             Glide.with(viewHolder.itemView.getContext())
-                    .load("https://az616578.vo.msecnd.net/files/2016/07/16/6360427652852023551050101223_friend.jpg")
+                    .load(track.getPhotoUri())
                     .error(R.drawable.dr_gradient_3_colors)
                     .into(viewHolder.mImageView);
-            viewHolder.mDisLikeTextView.setText("21");
-            viewHolder.mLikeTextView.setText("101");
-            viewHolder.mPrimaryTextView.setText(user);
-            viewHolder.mSecondaryTextView.setText("Rape me");
-            viewHolder.mTimeTextView.setText("3:33");
+            viewHolder.mDisLikeTextView.setText(String.valueOf(track.getDislikes()));
+            viewHolder.mLikeTextView.setText(String.valueOf(track.getLikes()));
+            viewHolder.mPrimaryTextView.setText(track.getTitle());
+            viewHolder.mSecondaryTextView.setText(track.getArtist());
+            viewHolder.mTimeTextView.setText(convertTime(track.getDuration()));
         }
 
-        private void setList(List<String> users) {
+        private void setList(List<Track> users) {
             mTracks = users;
         }
 
