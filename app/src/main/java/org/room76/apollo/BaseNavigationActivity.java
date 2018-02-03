@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.room76.apollo.mymusic.MyMusicActivity;
 import org.room76.apollo.signin.SignInActivity;
 import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.EspressoIdlingResource;
@@ -65,7 +66,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
         navigationView.setItemIconTintList(null);
         setupDrawerContent(navigationView);
 
-        if (null == savedInstanceState) {
+        if (null == savedInstanceState && mFragment != null) {
             initFragment(mFragment);
         }
     }
@@ -80,7 +81,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
         setupUserData();
     }
 
-    private void initFragment(Fragment roomsFragment) {
+    protected void initFragment(Fragment roomsFragment) {
         // Add the RoomsFragment to the layout
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -111,7 +112,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
                         Toast.makeText(getApplicationContext(), "Find rooms", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.find_music_navigation_menu_item:
-                        Toast.makeText(getApplicationContext(), "Find music", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), MyMusicActivity.class));
                         break;
                     case R.id.find_place_navigation_menu_item:
                         Toast.makeText(getApplicationContext(), "Find place", Toast.LENGTH_SHORT).show();

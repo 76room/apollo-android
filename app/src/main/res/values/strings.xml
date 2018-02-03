@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Room</string>
     <string name="add_room">New Room</string>
+
     <string name="title_hint">Enter title here.</string>
     <string name="description_hint">Enter description here.</string>
     <string name="empty_room_message">Room cannot be empty</string>
@@ -9,6 +10,7 @@
     <string name="cannot_connect_to_camera_message">Cannot connect to camera</string>
     <string name="take_picture">Add picture</string>
     <string name="take_picture_error">Could not take picture</string>
+
     <string name="no_statistics_available">No statistics</string>
     <string name="no_data">No data</string>
     <string name="loading">LOADING</string>
@@ -19,7 +21,7 @@
     <!--navbar-->
     <string name="navbar_my_rooms">My rooms</string>
     <string name="navbar_find_room">Find room</string>
-    <string name="navbar_find_music">Find music</string>
+    <string name="navbar_my_music">My music</string>
     <string name="navbar_find_place">Find place</string>
 
     <!--navbar-footer-->

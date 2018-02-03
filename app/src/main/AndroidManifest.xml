@@ -24,6 +24,7 @@
         <activity android:name=".roomdetail.RoomDetailActivity" />
         <activity android:name=".addroom.AddRoomActivity" />
         <activity android:name=".signin.SignInActivity" />
+        <activity android:name=".mymusic.MyMusicActivity" />
     </application>
 
 </manifest>
