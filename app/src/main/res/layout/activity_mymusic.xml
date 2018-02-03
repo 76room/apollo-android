@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".rooms.RoomsActivity"
+    tools:context=".MyMusicActivity"
     tools:openDrawer="start">
 
     <LinearLayout
@@ -21,8 +21,8 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/Toolbar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            />
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/coordinatorLayout"
@@ -33,16 +33,6 @@
                 android:id="@+id/contentFrame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_add_rooms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
-                android:src="@drawable/ic_add"
-                app:fabSize="normal"
-                app:layout_anchor="@id/contentFrame"
-                app:layout_anchorGravity="bottom|right|end"/>
         </android.support.design.widget.CoordinatorLayout>
 
     </LinearLayout>
@@ -53,16 +43,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@drawable/dr_drawer_background"
         android:fitsSystemWindows="true"
-        app:itemTextColor="@android:color/white"
-        app:itemIconTint="@android:color/white"
-        app:headerLayout="@layout/component_nav_header"
-        app:menu="@menu/drawer_actions">
-
-        <include layout="@layout/component_navbar_footer"/>
-
-    </android.support.design.widget.NavigationView>
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_actions"/>
 
 
 </android.support.v4.widget.DrawerLayout>
