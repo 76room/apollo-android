@@ -3,6 +3,8 @@ package org.room76.apollo.model;
 import android.support.v4.util.ArrayMap;
 
 import com.google.firebase.auth.FirebaseUser;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the endpoint for your data source. Typically, it would be a SQLite db and/or a server
@@ -21,6 +23,12 @@ public final class RoomsServiceApiEndpoint {
 
     private static void addRoom(FirebaseUser author, String title, String description, boolean isOpen, String imageUrl) {
         Room newRoom = new Room(author, title, description, isOpen, imageUrl);
+        List<String> tracks = new ArrayList<>();
+        tracks.add("track 1");
+        tracks.add("track 2");
+        tracks.add("track 3");
+        newRoom.setTracks(tracks);
+        newRoom.setTracks(tracks);
         DATA.put(newRoom.getId(), newRoom);
     }
 

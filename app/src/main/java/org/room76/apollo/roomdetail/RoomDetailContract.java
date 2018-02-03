@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 /**
  * This specifies the contract between the view and the presenter.
  */
@@ -35,6 +37,10 @@ public interface RoomDetailContract {
         void showIsOpen(boolean isOpen);
 
         void hideIsOpen();
+
+        void populateUserView(List<FirebaseUser> users);
+
+        void populateTrackList(List<String> tracks);
     }
 
     interface UserActionsListener {
