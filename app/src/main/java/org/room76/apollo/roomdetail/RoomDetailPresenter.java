@@ -3,6 +3,8 @@ package org.room76.apollo.roomdetail;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import org.room76.apollo.model.Room;
 import org.room76.apollo.model.RoomsRepository;
 
@@ -47,6 +49,20 @@ public class RoomDetailPresenter implements RoomDetailContract.UserActionsListen
         String title = room.getTitle();
         String description = room.getDescription();
         String imageUrl = room.getImageUrl();
+        FirebaseUser author = room.getAuthor();
+        boolean isOpen = room.isOpen();
+
+        if (author != null) {
+            mRoomsDetailView.showAuthor(author);
+        } else {
+            mRoomsDetailView.hideAuthor();
+        }
+
+        if (author != null) {
+            mRoomsDetailView.showIsOpen(isOpen);
+        } else {
+            mRoomsDetailView.hideIsOpen();
+        }
 
         if (title != null && title.isEmpty()) {
             mRoomsDetailView.hideTitle();

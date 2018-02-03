@@ -51,7 +51,7 @@ class AppNavigationTest {
 
         // Start statistics screen.
         onView(withId(R.id.nav_view))
-                .perform(navigateTo(R.id.statistics_navigation_menu_item))
+                .perform(navigateTo(R.id.nav_view))
 
         // Check that statistics Activity was opened.
         val expectedNoStatisticsText = InstrumentationRegistry.getTargetContext()

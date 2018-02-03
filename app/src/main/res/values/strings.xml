@@ -36,4 +36,11 @@
     <string name="log_in">Log in</string>
     <string name="email_hint">Enter email</string>
     <string name="password_hint">Enter password</string>
+
+    <string name="room_image_description">Room image</string>
+    <string name="location_icon_description">Location</string>
+    <string name="heart_icon_description">Like</string>
+    <string name="share_icon_description">Share</string>
+    <string name="author_image_description">Room author</string>
+    <string name="is_open_description">Is open</string>
 </resources>

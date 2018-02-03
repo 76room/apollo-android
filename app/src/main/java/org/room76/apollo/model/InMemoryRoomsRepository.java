@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Concrete implementation to load rooms from the a data source.
+ * Concrete implementation to load rooms from the data source.
  */
 public class InMemoryRoomsRepository implements RoomsRepository {
 

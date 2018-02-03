@@ -15,7 +15,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import org.room76.apollo.R;
 import org.room76.apollo.addroom.AddRoomActivity;
@@ -23,6 +27,7 @@ import org.room76.apollo.model.Room;
 import org.room76.apollo.roomdetail.RoomDetailActivity;
 import org.room76.apollo.util.Injection;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,6 +168,8 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
 
     private static class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.ViewHolder> {
+        public static final int ITEM_TYPE_FULL = 0;
+        public static final int ITEM_TYPE_WITHOUT_ROOM_IMAGE = 1;
 
         private List<Room> mRooms;
         private RoomItemListener mItemListener;
@@ -174,19 +181,44 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            Context context = parent.getContext();
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View roomView = inflater.inflate(R.layout.component_item_room, parent, false);
-
-            return new ViewHolder(roomView, mItemListener);
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            if (viewType == ITEM_TYPE_WITHOUT_ROOM_IMAGE) {
+                View roomView = inflater.inflate(R.layout.component_item_room_no_image, parent, false);
+                return new NoImageViewHolder(roomView, mItemListener);
+            } else {
+                View roomView = inflater.inflate(R.layout.component_item_room_full, parent, false);
+                return new FullViewHolder(roomView, mItemListener);
+            }
         }
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
+            final int itemType = getItemViewType(position);
+
             Room room = mRooms.get(position);
 
             viewHolder.title.setText(room.getTitle());
-            viewHolder.description.setText(room.getDescription());
+
+            if (room.getAuthor() != null && room.getAuthor().getPhotoUrl() != null) {
+                // This app uses Glide for image loading
+                Glide.with(viewHolder.itemView.getContext())
+                        .load(room.getAuthor().getPhotoUrl())
+                        .centerCrop()
+                        .into(viewHolder.authorImage);
+            }
+
+
+            if (itemType == ITEM_TYPE_FULL) {
+                Glide.with(viewHolder.itemView.getContext()).load(room.getImageUrl()).into(((FullViewHolder) viewHolder).roomImage);
+
+                if (room.isOpen()) {
+                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_door);
+                } else {
+                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_lock_outline);
+                }
+            } else {
+                ((NoImageViewHolder)viewHolder).description.setText(room.getDescription());
+            }
         }
 
         public void replaceData(List<Room> rooms) {
@@ -203,6 +235,15 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
             return mRooms.size();
         }
 
+        @Override
+        public int getItemViewType(int position) {
+            if (mRooms.get(position).getImageUrl() == null) {
+                return ITEM_TYPE_WITHOUT_ROOM_IMAGE;
+            } else {
+                return ITEM_TYPE_FULL;
+            }
+        }
+
         public Room getItem(int position) {
             return mRooms.get(position);
         }
@@ -210,15 +251,15 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             public TextView title;
+            public ImageButton authorImage;
 
-            public TextView description;
             private RoomItemListener mItemListener;
 
             public ViewHolder(View itemView, RoomItemListener listener) {
                 super(itemView);
                 mItemListener = listener;
                 title = itemView.findViewById(R.id.room_detail_title);
-                description = itemView.findViewById(R.id.room_detail_description);
+                authorImage = itemView.findViewById(R.id.room_author_image);
                 itemView.setOnClickListener(this);
             }
 
@@ -227,9 +268,29 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
                 int position = getAdapterPosition();
                 Room room = getItem(position);
                 mItemListener.onRoomClick(room);
-
             }
         }
+
+        public class NoImageViewHolder extends ViewHolder {
+            public TextView description;
+
+            public NoImageViewHolder(View itemView, RoomItemListener listener) {
+                super(itemView, listener);
+                description = itemView.findViewById(R.id.room_detail_description);
+            }
+        }
+
+        public class FullViewHolder extends ViewHolder {
+            public ImageView roomImage;
+            public ImageView isOpen;
+
+            public FullViewHolder(View itemView, RoomItemListener listener) {
+                super(itemView, listener);
+                roomImage = itemView.findViewById(R.id.room_detail_image);
+                isOpen = itemView.findViewById(R.id.room_is_open);
+            }
+        }
+
     }
 
     public interface RoomItemListener {

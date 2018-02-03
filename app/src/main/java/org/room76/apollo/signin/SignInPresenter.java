@@ -43,7 +43,7 @@ public class SignInPresenter implements SignInContract.UserActionsListener {
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
+                            if (task.isSuccessful()) {
                                 mSignInContractView.navigateToMainPage(task.getResult().getUser());
                             } else {
                                 mSignInContractView.showError(task.getException().getMessage());

@@ -2,11 +2,14 @@ package org.room76.apollo.roomdetail;
 
 import android.support.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseUser;
+
 /**
  * This specifies the contract between the view and the presenter.
  */
 public interface RoomDetailContract {
 
+    // TODO ask why it needs to be so comlex; it is better just to leave showRoomInfo() function
     interface View {
 
         void setProgressIndicator(boolean active);
@@ -24,6 +27,14 @@ public interface RoomDetailContract {
         void hideDescription();
 
         void showDescription(String description);
+
+        void showAuthor(FirebaseUser author);
+
+        void hideAuthor();
+
+        void showIsOpen(boolean isOpen);
+
+        void hideIsOpen();
     }
 
     interface UserActionsListener {

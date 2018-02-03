@@ -2,7 +2,11 @@ package org.room76.apollo.model;
 
 import android.support.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.UUID;
+
+// TODO check if it needs to be immutable
 
 /**
  * Immutable model class for a Room.
@@ -10,6 +14,9 @@ import java.util.UUID;
 public final class Room {
 
     private final String mId;
+
+    @Nullable
+    private final FirebaseUser mAuthor;
     @Nullable
     private final String mTitle;
     @Nullable
@@ -17,15 +24,20 @@ public final class Room {
     @Nullable
     private final String mImageUrl;
 
-    public Room(@Nullable String title, @Nullable String description) {
-        this(title, description, null);
+    private final boolean mIsOpen;
+
+
+    public Room(@Nullable FirebaseUser author, @Nullable String title, @Nullable String description, boolean isOpen) {
+        this(author, title, description, isOpen, null);
     }
 
-    public Room(@Nullable String title, @Nullable String description, @Nullable String imageUrl) {
+    public Room(@Nullable FirebaseUser author, @Nullable String title, @Nullable String description, boolean isOpen, @Nullable String imageUrl) {
         mId = UUID.randomUUID().toString();
+        mAuthor = author;
         mTitle = title;
         mDescription = description;
         mImageUrl = imageUrl;
+        mIsOpen = isOpen;
     }
 
     public String getId() {
@@ -45,6 +57,15 @@ public final class Room {
     @Nullable
     public String getImageUrl() {
         return mImageUrl;
+    }
+
+    @Nullable
+    public FirebaseUser getAuthor() {
+        return mAuthor;
+    }
+
+    public boolean isOpen() {
+        return mIsOpen;
     }
 
     public boolean isEmpty() {

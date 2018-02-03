@@ -2,6 +2,8 @@ package org.room76.apollo.addroom;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import org.room76.apollo.model.Room;
 import org.room76.apollo.model.RoomsRepository;
 
@@ -35,7 +37,11 @@ public class AddRoomPresenter implements AddRoomContract.UserActionsListener {
         if (mImageFile.exists()) {
             imageUrl = mImageFile.getPath();
         }
-        Room newRoom = new Room(title, description, imageUrl);
+        // TODO add author and isOpen filling
+        FirebaseUser author = null;
+        boolean isOpen = true;
+
+        Room newRoom = new Room(author, title, description, isOpen, imageUrl);
         if (newRoom.isEmpty()) {
             mAddRoomView.showEmptyRoomError();
         } else {

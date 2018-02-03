@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -13,6 +14,23 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:visibility="invisible"/>
+
+    <ImageButton
+        android:id="@+id/room_author_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/ic_default_user_image"
+        android:contentDescription="@string/author_image_description" />
+
+    <ImageView
+        android:id="@+id/room_is_open"
+        style="@style/IconStyle"
+        android:layout_gravity="end"
+        android:layout_margin="16dp"
+        android:background="@null"
+        android:contentDescription="@string/is_open_description"
+        tools:background="@drawable/ic_lock_outline" />
 
     <TextView
         android:id="@+id/room_detail_title"
