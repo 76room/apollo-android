@@ -173,7 +173,6 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
         private List<Room> mRooms;
         private RoomItemListener mItemListener;
-        private WeakReference<Context> context;
 
         public RoomsAdapter(List<Room> rooms, RoomItemListener itemListener) {
             setList(rooms);
@@ -182,8 +181,7 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            context = new WeakReference<>(parent.getContext());
-            LayoutInflater inflater = LayoutInflater.from(context.get());
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             if (viewType == ITEM_TYPE_WITHOUT_ROOM_IMAGE) {
                 View roomView = inflater.inflate(R.layout.component_item_room_no_image, parent, false);
                 return new NoImageViewHolder(roomView, mItemListener);
@@ -203,15 +201,15 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
             if (room.getAuthor() != null && room.getAuthor().getPhotoUrl() != null) {
                 // This app uses Glide for image loading
-                Glide.with(context.get())
+                Glide.with(viewHolder.itemView.getContext())
                         .load(room.getAuthor().getPhotoUrl())
                         .centerCrop()
                         .into(viewHolder.authorImage);
             }
 
 
-            if (itemType == ITEM_TYPE_FULL && context.get() != null) {
-                Glide.with(context.get()).load(room.getImageUrl()).into(((FullViewHolder) viewHolder).roomImage);
+            if (itemType == ITEM_TYPE_FULL) {
+                Glide.with(viewHolder.itemView.getContext()).load(room.getImageUrl()).into(((FullViewHolder) viewHolder).roomImage);
 
                 if (room.isOpen()) {
                     ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_door);

@@ -20,7 +20,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/author_no_image"
+            android:background="@drawable/ic_default_user_image"
             android:contentDescription="@string/author_image_description" />
 
         <LinearLayout
