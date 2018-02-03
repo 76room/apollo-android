@@ -1,6 +1,7 @@
 package org.room76.apollo.roomdetail;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -26,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.R;
 import org.room76.apollo.model.Track;
+import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
 import org.room76.apollo.util.Injection;
 
@@ -192,7 +196,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         Glide.with(this)
                 .load(imageUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
+                .centerCrop()
                 .into(new GlideDrawableImageViewTarget(mHeaderImage) {
                     @Override
                     public void onResourceReady(GlideDrawable resource,
@@ -217,10 +221,10 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (position == ItemTouchHelper.LEFT) {
-            mTracks.get(viewHolder.getAdapterPosition()).dislike();
-        } else if (position == ItemTouchHelper.RIGHT) {
-            mTracks.get(viewHolder.getAdapterPosition()).like();
+        if (direction == ItemTouchHelper.LEFT) {
+            mTracks.get(position).dislike();
+        } else if (direction == ItemTouchHelper.RIGHT) {
+            mTracks.get(position).like();
         }
         mTrackAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
 
@@ -254,8 +258,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             Glide.with(viewHolder.itemView.getContext())
                     .load(user.getPhotoUrl())
                     .error(R.drawable.ic_default_user_image)
-                    .override(36,36)
-                    .centerCrop()
+                    .transform(new CircleTransform(viewHolder.itemView.getContext()))
                     .into(new GlideDrawableImageViewTarget(viewHolder.mImageView) {
                         @Override
                         public void onResourceReady(GlideDrawable resource,

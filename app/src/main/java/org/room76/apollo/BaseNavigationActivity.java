@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 import org.room76.apollo.mymusic.MyMusicActivity;
 import org.room76.apollo.signin.SignInActivity;
 import org.room76.apollo.signin.SignInState;
+import org.room76.apollo.util.BorderTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
 
 /**
@@ -174,6 +175,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
                     .load(user.getPhotoUrl())
                     .error(R.drawable.ic_default_user_image)
                     .override(100, 100)
+                    .transform(new BorderTransform(getApplicationContext()))
                     .centerCrop()
                     .into(mUserImage);
         }
