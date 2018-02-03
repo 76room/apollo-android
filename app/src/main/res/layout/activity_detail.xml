@@ -30,7 +30,8 @@
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/dr_gradient_3_colors"
+                android:foreground="@color/colorBlur"
+                tools:src="@drawable/dr_gradient_3_colors"
                 app:layout_collapseMode="parallax"/>
 
             <android.support.v7.widget.Toolbar

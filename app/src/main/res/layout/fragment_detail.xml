@@ -4,11 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:orientation="vertical">
 
     <!--<ImageButton-->
         <!--android:id="@+id/room_author_image"-->
@@ -76,6 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:orientation="horizontal"
+            android:nestedScrollingEnabled="true"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
         <LinearLayout
@@ -106,10 +103,12 @@
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="10dp"
             android:id="@+id/recycler_view_music"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:orientation="vertical"
+            android:nestedScrollingEnabled="true"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
         <LinearLayout

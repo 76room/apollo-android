@@ -3,13 +3,18 @@ package org.room76.apollo.roomdetail;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,7 +33,7 @@ import java.util.List;
 /**
  * Main UI for the room detail screen.
  */
-public class RoomDetailFragment extends Fragment implements RoomDetailContract.View {
+public class RoomDetailFragment extends Fragment implements RoomDetailContract.View, SwipeItemTouchHelper.RecyclerItemTouchHelperListener{
 
     public static final String ARGUMENT_ROOM_ID = "ROOM_ID";
 
@@ -79,6 +84,11 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             mProgressBar = getActivity().findViewById(R.id.animation_view);
         }
         mActionsListener = new RoomDetailPresenter(Injection.provideRoomsRepository(), this);
+        DividerItemDecoration decor = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        decor.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.dr_divider));
+        mTracksRecyclerView.addItemDecoration(decor);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new SwipeItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mTracksRecyclerView);
         return root;
     }
 
@@ -176,7 +186,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         Glide.with(this)
                 .load(imageUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
+                .fitCenter()
                 .into(new GlideDrawableImageViewTarget(mHeaderImage) {
                     @Override
                     public void onResourceReady(GlideDrawable resource,
@@ -196,7 +206,18 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     @Override
     public void showMissingRoom() {
         mDetailTitle.setTitle("Empty room");
-        mDetailDescription.setText(getString(R.string.no_data));
+       // mDetailDescription.setText(getString(R.string.no_data));
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (position == ItemTouchHelper.LEFT) {
+
+        } else if (position == ItemTouchHelper.RIGHT) {
+
+        }
+        mTrackAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
+
     }
 
     private static class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
@@ -227,7 +248,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             Glide.with(viewHolder.itemView.getContext())
                     .load(user.getPhotoUrl())
                     .error(R.drawable.ic_default_user_image)
-                    .override(100, 100)
+                    .override(36,36)
                     .centerCrop()
                     .into(new GlideDrawableImageViewTarget(viewHolder.mImageView) {
                         @Override
@@ -257,12 +278,12 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             public UserViewHolder(View itemView) {
                 super(itemView);
                 mImageView = itemView.findViewById(R.id.user_image);
-                mTextView = itemView.findViewById(R.id.user_name);
+                mTextView = itemView.findViewById(R.id.user_email);
             }
         }
     }
 
-    private static class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
+    public static class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
 
         private List<String> mTracks;
 
@@ -304,11 +325,9 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
         public class TrackViewHolder extends RecyclerView.ViewHolder {
             ImageView mImageView;
-            TextView mTimeTextView;
-            TextView mPrimaryTextView;
-            TextView mSecondaryTextView;
-            TextView mLikeTextView;
-            TextView mDisLikeTextView;
+            TextView mTimeTextView, mPrimaryTextView, mSecondaryTextView, mLikeTextView, mDisLikeTextView;
+            LinearLayout mBackground;
+            ConstraintLayout mForeground;
 
             public TrackViewHolder(View itemView) {
                 super(itemView);
@@ -318,6 +337,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
                 mSecondaryTextView = itemView.findViewById(R.id.track_description);
                 mLikeTextView = itemView.findViewById(R.id.like);
                 mDisLikeTextView = itemView.findViewById(R.id.dislike);
+                mBackground = itemView.findViewById(R.id.view_background);
+                mForeground = itemView.findViewById(R.id.view_foreground);
             }
 
         }
