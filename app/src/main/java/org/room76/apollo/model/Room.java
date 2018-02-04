@@ -1,14 +1,16 @@
 package org.room76.apollo.model;
 
-import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-// TODO check if it needs to be immutable
 
 /**
  * Immutable model class for a Room.
@@ -28,22 +30,14 @@ public final class Room {
 
     private boolean mIsOpen;
 
+    private List<FirebaseUser> mUsers = new ArrayList<>();
+
+    private List<Track> mTracks = new ArrayList<>();
+
     public Room() {
     }
 
-    public Room(String mId,
-                @Nullable FirebaseUser mAuthor,
-                @Nullable String mTitle,
-                @Nullable String mDescription,
-                @Nullable String mImageUrl,
-                boolean mIsOpen) {
-        this.mId = mId;
-        this.mAuthor = mAuthor;
-        this.mTitle = mTitle;
-        this.mDescription = mDescription;
-        this.mImageUrl = mImageUrl;
-        this.mIsOpen = mIsOpen;
-    }
+
 
     public Room(@Nullable FirebaseUser author, @Nullable String title, @Nullable String description, boolean isOpen) {
         this(author, title, description, isOpen, null);
@@ -115,9 +109,41 @@ public final class Room {
         this.mIsOpen = mIsOpen;
     }
 
+    public List<FirebaseUser> getUsers() {
+        return mUsers;
+    }
+
+    public void setUsers(List<FirebaseUser> mUsers) {
+        this.mUsers = mUsers;
+    }
+
+    public List<Track> getTracks() {
+        return mTracks;
+    }
+
+    public void setTracks(List<Track> mTracks) {
+        this.mTracks = mTracks;
+    }
+
     public static Room roomFromMap(Map<String, Object> roomMap) {
         Map<String, Object> authorMap = (Map<String, Object>) roomMap.get("author");
         FirebaseUserMock author = FirebaseUserMock.userFromMap(authorMap);
+        List<FirebaseUser> users = new ArrayList<>();
+        List<Track> tracks = new ArrayList<>();
+        if (roomMap.containsKey("users")) {
+            List<HashMap<String, Object>> usersMap = (ArrayList<HashMap<String, Object>>) roomMap.get("users");
+            for (HashMap key : usersMap) {
+                users.add(FirebaseUserMock
+                        .userFromMap(key));
+            }
+        }
+        if (roomMap.containsKey("tracks")) {
+            ArrayList<HashMap<String, Object>> tracksMap = (ArrayList<HashMap<String, Object>>) roomMap.get("tracks");
+            for (HashMap key : tracksMap) {
+                tracks.add(Track
+                        .trackFromMap(key));
+            }
+        }
         Room r = new Room();
         if (roomMap.containsKey("id")) {
             r.setId((String) roomMap.get("id"));
@@ -135,6 +161,8 @@ public final class Room {
         if (roomMap.containsKey("open")) {
             r.setIsOpen((Boolean) roomMap.get("open"));
         }
+        r.setUsers(users);
+        r.setTracks(tracks);
         return r;
     }
 }

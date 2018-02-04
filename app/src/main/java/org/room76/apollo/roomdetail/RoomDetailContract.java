@@ -4,6 +4,10 @@ import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import org.room76.apollo.model.Track;
+
+import java.util.List;
+
 /**
  * This specifies the contract between the view and the presenter.
  */
@@ -35,6 +39,10 @@ public interface RoomDetailContract {
         void showIsOpen(boolean isOpen);
 
         void hideIsOpen();
+
+        void populateUserView(List<FirebaseUser> users);
+
+        void populateTrackList(List<Track> tracks);
     }
 
     interface UserActionsListener {

@@ -33,7 +33,7 @@
                 android:alpha="0.5"
                 android:contentDescription="@string/room_image_description"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/room_detail_image_sample" />
+                tools:src="@drawable/dr_gradient_3_colors_hot" />
 
             <ImageView
                 android:id="@+id/room_is_open"

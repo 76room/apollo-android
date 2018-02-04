@@ -1,7 +1,6 @@
 package org.room76.apollo.rooms;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,9 +24,9 @@ import org.room76.apollo.R;
 import org.room76.apollo.addroom.AddRoomActivity;
 import org.room76.apollo.model.Room;
 import org.room76.apollo.roomdetail.RoomDetailActivity;
+import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.Injection;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -189,6 +188,7 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
                 View roomView = inflater.inflate(R.layout.component_item_room_full, parent, false);
                 return new FullViewHolder(roomView, mItemListener);
             }
+
         }
 
         @Override
@@ -200,16 +200,18 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
             viewHolder.title.setText(room.getTitle());
 
             if (room.getAuthor() != null && room.getAuthor().getPhotoUrl() != null) {
-                // This app uses Glide for image loading
                 Glide.with(viewHolder.itemView.getContext())
                         .load(room.getAuthor().getPhotoUrl())
                         .centerCrop()
+                        .transform(new CircleTransform(viewHolder.itemView.getContext()))
                         .into(viewHolder.authorImage);
             }
 
 
             if (itemType == ITEM_TYPE_FULL) {
-                Glide.with(viewHolder.itemView.getContext()).load(room.getImageUrl()).into(((FullViewHolder) viewHolder).roomImage);
+                Glide.with(viewHolder.itemView.getContext())
+                        .load(room.getImageUrl())
+                        .into(((FullViewHolder) viewHolder).roomImage);
 
                 if (room.isOpen()) {
                     ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_door);

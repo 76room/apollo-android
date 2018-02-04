@@ -1,0 +1,14 @@
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:gravity="center"
+        android:textStyle="bold"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:layout_height="match_parent"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:text="Please follow settings to allow read external storage" />
+
+</RelativeLayout>

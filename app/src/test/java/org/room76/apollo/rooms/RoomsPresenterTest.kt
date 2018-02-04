@@ -58,9 +58,11 @@ class RoomsPresenterTest {
 
         // Then progress indicator is hidden and rooms are shown in UI
         val inOrder = Mockito.inOrder(mRoomsView)
+
         inOrder.verify<RoomsContract.View>(mRoomsView).setProgressIndicator(true)
         inOrder.verify<RoomsContract.View>(mRoomsView).setProgressIndicator(false)
         verify<RoomsContract.View>(mRoomsView).showRooms(ROOMS)
+
     }
 
     @Test

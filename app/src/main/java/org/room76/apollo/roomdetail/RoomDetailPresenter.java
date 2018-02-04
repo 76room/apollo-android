@@ -81,6 +81,7 @@ public class RoomDetailPresenter implements RoomDetailContract.UserActionsListen
         } else {
             mRoomsDetailView.hideImage();
         }
-
+        mRoomsDetailView.populateTrackList(room.getTracks());
+        mRoomsDetailView.populateUserView(room.getUsers());
     }
 }
