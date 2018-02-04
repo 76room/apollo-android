@@ -40,7 +40,7 @@ public class SwipeItemTouchHelper  extends ItemTouchHelper.SimpleCallback {
         final View backgroundView = ((RoomDetailFragment.TrackAdapter.TrackViewHolder) viewHolder).mBackground;
 
         Log.v(this.getClass().getCanonicalName(),"dX = " + dX);
-        if (dX <= backgroundView.getWidth()/2 || -dX >= backgroundView.getWidth()/2) {
+        if (dX <= backgroundView.getWidth()/2 || -dX >= -backgroundView.getWidth()/2) {
             getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
         }

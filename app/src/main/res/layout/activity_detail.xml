@@ -26,10 +26,10 @@
             <ImageView
                 android:id="@+id/header_image"
                 android:layout_width="match_parent"
-                android:layout_height="235dp"
+                android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
-                android:contentDescription="@string/app_name"
+                android:contentDescription="@string/room_header"
                 android:foreground="@color/colorBlur"
                 tools:src="@drawable/dr_gradient_3_colors"
                 app:layout_collapseMode="parallax"/>
@@ -37,6 +37,8 @@
             <ImageView
                 android:id="@+id/room_is_open"
                 style="@style/IconStyle"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_gravity="end"
                 android:layout_margin="16dp"
                 android:fitsSystemWindows="true"

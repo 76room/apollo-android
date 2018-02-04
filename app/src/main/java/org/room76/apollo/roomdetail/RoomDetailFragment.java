@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -55,6 +56,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     private RecyclerView mTracksRecyclerView;
 
+    private RecyclerView mTracksRecomRecyclerView;
+
     private UsersAdapter mUserAdapter;
 
     private TrackAdapter mTrackAdapter;
@@ -63,7 +66,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     private ImageView mIsOpen;
 
-    private List<Track> mTracks;
+    private SortedList<Track> mTracks;
 
 //    private ImageButton mAuthorImage;
 
@@ -85,6 +88,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 //        mAuthorImage = root.findViewById(R.id.room_author_image);
         mUserRecyclerView = root.findViewById(R.id.recycler_view_users);
         mTracksRecyclerView = root.findViewById(R.id.recycler_view_music);
+        mTracksRecomRecyclerView = root.findViewById(R.id.recycler_view_music_recom);
         if (getActivity() != null) {
             mHeaderImage = getActivity().findViewById(R.id.header_image);
             mDetailTitle = getActivity().findViewById(R.id.toolbar);
@@ -172,9 +176,88 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     @Override
     public void populateTrackList(List<Track> tracks) {
-        mTracks = tracks;
-        mTrackAdapter = new TrackAdapter(tracks);
+        SortedList<Track> mRecomm = new SortedList<>(Track.class, new SortedList.Callback<Track>() {
+            @Override
+            public int compare(Track o1, Track o2) {
+                return 0;
+            }
+
+            @Override
+            public void onChanged(int position, int count) {
+
+            }
+
+            @Override
+            public boolean areContentsTheSame(Track oldItem, Track newItem) {
+                return false;
+            }
+
+            @Override
+            public boolean areItemsTheSame(Track item1, Track item2) {
+                return false;
+            }
+
+            @Override
+            public void onInserted(int position, int count) {
+
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+
+            }
+        });
+        mRecomm.add(new Track("Thunder", "Imagine Dragons", 200000, "http://test"));
+        mRecomm.add(new Track("Believer", "Imagine Dragons", 400000, "http://test"));
+        mRecomm.add(new Track("Розовое вино", "Eлджей", 50000, "http://test"));
+        RecommendationsAdapter adapter = new RecommendationsAdapter(mRecomm);
+        mTracksRecomRecyclerView.setAdapter(adapter);
+
+        mTrackAdapter = new TrackAdapter(mTracks);
+        mTracks = new SortedList<>(Track.class, new SortedList.Callback<Track>() {
+            @Override
+            public int compare(Track o1, Track o2) {
+                return o1.compareTo(o2);
+            }
+
+            @Override
+            public void onChanged(int position, int count) {
+                mTrackAdapter.notifyItemRangeChanged(position, count);
+            }
+
+            @Override
+            public boolean areContentsTheSame(Track oldItem, Track newItem) {
+                return oldItem.getLikes()-oldItem.getDislikes() == newItem.getLikes()-newItem.getDislikes();
+            }
+
+            @Override
+            public boolean areItemsTheSame(Track item1, Track item2) {
+                return item1.equals(item2);
+            }
+
+            @Override
+            public void onInserted(int position, int count) {
+                mTrackAdapter.notifyItemInserted(position);
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+                mTrackAdapter.notifyItemRangeRemoved(position, count);
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+                mTrackAdapter.notifyItemMoved(fromPosition, toPosition);
+            }
+        });
+        mTracks.addAll(tracks);
         mTracksRecyclerView.setAdapter(mTrackAdapter);
+
     }
 
     @Override
@@ -192,6 +275,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         mHeaderImage.setVisibility(View.VISIBLE);
 
         // This app uses Glide for image loading
+        int density = (int) getResources().getDisplayMetrics().density;
         Glide.with(this)
                 .load(imageUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -296,7 +380,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
 
-        public TrackAdapter(List<Track> users) {
+        public TrackAdapter(SortedList<Track> users) {
             setList(users);
         }
 
@@ -322,8 +406,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             viewHolder.mTimeTextView.setText(convertTime(track.getDuration()));
         }
 
-        private void setList(List<Track> users) {
-            mTracks = users;
+        private void setList(SortedList<Track> tracks) {
+            mTracks = tracks;
         }
 
         @Override
@@ -334,7 +418,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         public class TrackViewHolder extends RecyclerView.ViewHolder {
             ImageView mImageView;
             TextView mTimeTextView, mPrimaryTextView, mSecondaryTextView, mLikeTextView, mDisLikeTextView;
-            LinearLayout mBackground;
+            LinearLayout mBackground, mPlusImageView, mLikeContainer;
             ConstraintLayout mForeground;
 
             public TrackViewHolder(View itemView) {
@@ -347,8 +431,23 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
                 mDisLikeTextView = itemView.findViewById(R.id.dislike);
                 mBackground = itemView.findViewById(R.id.view_background);
                 mForeground = itemView.findViewById(R.id.view_foreground);
+                mPlusImageView = itemView.findViewById(R.id.recommendatios_container);
+                mLikeContainer = itemView.findViewById(R.id.like_container);
             }
 
+        }
+    }
+
+    public class RecommendationsAdapter extends TrackAdapter {
+        public RecommendationsAdapter(SortedList<Track> tracks) {
+            super(tracks);
+        }
+
+        @Override
+        public void onBindViewHolder(TrackViewHolder viewHolder, int position) {
+            super.onBindViewHolder(viewHolder,position);
+            viewHolder.mLikeContainer.setVisibility(View.GONE);
+            viewHolder.mPlusImageView.setVisibility(View.VISIBLE);
         }
     }
 }
