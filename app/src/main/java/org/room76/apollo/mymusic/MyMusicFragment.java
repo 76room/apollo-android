@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import org.room76.apollo.R;
 import org.room76.apollo.model.Track;
@@ -246,7 +251,7 @@ public class MyMusicFragment extends Fragment implements MyMusicContract.View {
         playTrack();
     }
 
-    private static class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder> {
+    private static class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.TrackViewHolder> {
 
         private List<Track> mTracks;
         private TrackItemListener mItemListener;
@@ -257,22 +262,24 @@ public class MyMusicFragment extends Fragment implements MyMusicContract.View {
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public TrackViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
-            View roomView = inflater.inflate(R.layout.item_track, parent, false);
+            View roomView = inflater.inflate(R.layout.component_track_item, parent, false);
 
-            return new ViewHolder(roomView, mItemListener);
+            return new TrackViewHolder(roomView, mItemListener);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(TrackViewHolder viewHolder, int position) {
             Track track = mTracks.get(position);
-
-            viewHolder.title.setText(track.getTitle());
-            viewHolder.artist.setText(track.getArtist());
-            int duration = track.getDuration();
-            viewHolder.duration.setText(convertTime(duration));
+            Glide.with(viewHolder.itemView.getContext())
+                    .load(track.getPhotoUri())
+                    .error(R.drawable.dr_gradient_3_colors)
+                    .into(viewHolder.mImageView);
+            viewHolder.mPrimaryTextView.setText(track.getTitle());
+            viewHolder.mSecondaryTextView.setText(track.getArtist());
+            viewHolder.mTimeTextView.setText(convertTime(track.getDuration()));
         }
 
         public void replaceData(List<Track> tracks) {
@@ -293,20 +300,21 @@ public class MyMusicFragment extends Fragment implements MyMusicContract.View {
             return mTracks.get(position);
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-            public TextView title;
-            public TextView artist;
-            public TextView duration;
+        public class TrackViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+            ImageView mImageView;
+            TextView mTimeTextView, mPrimaryTextView, mSecondaryTextView;
 
             private TrackItemListener mItemListener;
 
-            public ViewHolder(View itemView, TrackItemListener listener) {
+            public TrackViewHolder(View itemView, TrackItemListener listener) {
                 super(itemView);
                 mItemListener = listener;
-                title = itemView.findViewById(R.id.track_detail_title);
-                artist = itemView.findViewById(R.id.track_detail_artist);
-                duration = itemView.findViewById(R.id.track_detail_duration);
+                mImageView = itemView.findViewById(R.id.track_image);
+                mTimeTextView = itemView.findViewById(R.id.track_timeview);
+                mPrimaryTextView = itemView.findViewById(R.id.track_title);
+                mSecondaryTextView = itemView.findViewById(R.id.track_description);
+                itemView.findViewById(R.id.container).setVisibility(View.GONE);
+                itemView.findViewById(R.id.view_foreground).setVisibility(View.GONE);
                 itemView.setOnClickListener(this);
             }
 
