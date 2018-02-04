@@ -1,10 +1,15 @@
 package org.room76.apollo.model;
 
+import android.support.v4.util.ArrayMap;
+
+import com.google.firebase.auth.FirebaseUser;
+
+import org.room76.apollo.signin.SignInState;
+
 /**
  * Immutable model class for a Track.
  */
 public final class Track {
-
     private String mArtist;
     private String mTitle;
     private String mPath;
@@ -14,6 +19,8 @@ public final class Track {
 
     private int mLikes;
     private int mDislikes;
+
+    private ArrayMap<FirebaseUser, Byte> mVoted;
 
     public Track() {
     }
@@ -26,6 +33,7 @@ public final class Track {
         mPhotoUri = "https://az616578.vo.msecnd.net/files/2016/07/16/6360427652852023551050101223_friend.jpg";
         mLikes = 0;
         mDislikes = 0;
+        mVoted = new ArrayMap<>();
     }
 
 
@@ -50,7 +58,10 @@ public final class Track {
     }
 
     public void like() {
-        mLikes ++;
+        if (!isVoted(SignInState.getInstance().getUser())) {
+            mLikes++;
+            mVoted.put(SignInState.getInstance().getUser(), (byte) 1);
+        }
     }
 
     public int getDislikes() {
@@ -58,7 +69,10 @@ public final class Track {
     }
 
     public void dislike() {
-        mDislikes++;
+        if (!isVoted(SignInState.getInstance().getUser())) {
+            mDislikes++;
+            mVoted.put(SignInState.getInstance().getUser(), (byte) -1);
+        }
     }
 
     public String getPhotoUri() {
@@ -67,5 +81,9 @@ public final class Track {
 
     public void setPhotoUri(String mPhotoUri) {
         this.mPhotoUri = mPhotoUri;
+    }
+
+    public boolean isVoted(FirebaseUser user) {
+        return mVoted.containsKey(user) && (mVoted.get(user) == 1 || mVoted.get(user) == -1);
     }
 }

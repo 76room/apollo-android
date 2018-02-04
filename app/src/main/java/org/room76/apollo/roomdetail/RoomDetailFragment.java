@@ -1,7 +1,6 @@
 package org.room76.apollo.roomdetail;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -17,11 +16,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -29,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.R;
 import org.room76.apollo.model.Track;
+import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
 import org.room76.apollo.util.Injection;
@@ -83,7 +82,6 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_detail, container, false);
         mDetailDescription = root.findViewById(R.id.room_detail_description);
-        mIsOpen = root.findViewById(R.id.room_is_open);
 //        mAuthorImage = root.findViewById(R.id.room_author_image);
         mUserRecyclerView = root.findViewById(R.id.recycler_view_users);
         mTracksRecyclerView = root.findViewById(R.id.recycler_view_music);
@@ -91,6 +89,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             mHeaderImage = getActivity().findViewById(R.id.header_image);
             mDetailTitle = getActivity().findViewById(R.id.toolbar);
             mProgressBar = getActivity().findViewById(R.id.animation_view);
+            mIsOpen = getActivity().findViewById(R.id.room_is_open);
         }
         mActionsListener = new RoomDetailPresenter(Injection.provideRoomsRepository(), this);
         DividerItemDecoration decor = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
@@ -221,6 +220,9 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (mTracks.get(position).isVoted(SignInState.getInstance().getUser())) {
+            Toast.makeText(getContext(),"You already voted", Toast.LENGTH_SHORT).show();
+        }
         if (direction == ItemTouchHelper.LEFT) {
             mTracks.get(position).dislike();
         } else if (direction == ItemTouchHelper.RIGHT) {

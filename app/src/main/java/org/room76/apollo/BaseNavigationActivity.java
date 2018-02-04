@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.mymusic.MyMusicActivity;
+import org.room76.apollo.rooms.RoomsActivity;
 import org.room76.apollo.signin.SignInActivity;
 import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.BorderTransform;
@@ -107,7 +108,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.my_rooms_navigation_menu_item:
-                        Toast.makeText(getApplicationContext(), "My rooms", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), RoomsActivity.class));
                         break;
                     case R.id.find_rooms_navigation_menu_item:
                         Toast.makeText(getApplicationContext(), "Find rooms", Toast.LENGTH_SHORT).show();
