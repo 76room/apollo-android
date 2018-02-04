@@ -14,4 +14,7 @@
     <color name="colorPrimaryAnalog">#006662</color>
     <color name="colorPrimaryDarkAnalog">#003633</color>
     <color name="colorAccentAnalog">#00E875</color>
+
+    <color name="colorDivider">#10000000</color>
+    <color name="colorBlur">#50000000</color>
 </resources>

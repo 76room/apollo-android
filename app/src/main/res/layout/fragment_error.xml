@@ -7,7 +7,8 @@
         android:textStyle="bold"
         style="@style/TextAppearance.AppCompat.Headline"
         android:layout_height="match_parent"
+        android:textColor="@android:color/white"
         android:layout_width="match_parent"
-        android:text="You chose bad way" />
+        android:text="Please follow settings to allow read external storage" />
 
 </RelativeLayout>

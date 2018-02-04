@@ -5,7 +5,7 @@
     <item
         android:id="@android:id/mask"
         android:gravity="center">
-        <shape android:shape="rectangle">
+        <shape android:shape="ring">
             <solid android:color="@android:color/white"/>
         </shape>
     </item>

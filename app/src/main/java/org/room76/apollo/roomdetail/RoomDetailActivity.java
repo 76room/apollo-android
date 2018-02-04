@@ -28,11 +28,11 @@ public class RoomDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         // Set up the toolbar.
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowHomeEnabled(true);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Get the requested room id
         String roomId = getIntent().getStringExtra(EXTRA_ROOM_ID);

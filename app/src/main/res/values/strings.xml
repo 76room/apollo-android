@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Room</string>
+    <string name="app_name">Apollo</string>
+    <string name="room_header">Room</string>
     <string name="add_room">New Room</string>
 
     <string name="title_hint">Enter title here.</string>
@@ -10,10 +11,6 @@
     <string name="cannot_connect_to_camera_message">Cannot connect to camera</string>
     <string name="take_picture">Add picture</string>
     <string name="take_picture_error">Could not take picture</string>
-
-    <string name="no_statistics_available">No statistics</string>
-    <string name="no_data">No data</string>
-    <string name="loading">LOADING</string>
 
     <!--testing-->
     <string name="navigation_view_header_title">sample@gmail.com</string>
@@ -39,10 +36,18 @@
     <string name="email_hint">Enter email</string>
     <string name="password_hint">Enter password</string>
 
+    <!--room-details-->
+    <string name="details_users">Users</string>
+    <string name="details_playlist">Playlist</string>
+    <string name="details_location">Location</string>
     <string name="room_image_description">Room image</string>
     <string name="location_icon_description">Location</string>
     <string name="heart_icon_description">Like</string>
     <string name="share_icon_description">Share</string>
     <string name="author_image_description">Room author</string>
     <string name="is_open_description">Is open</string>
+    <string name="user_avatar">user avatar</string>
+
+    <string name="like">Like</string>
+    <string name="dislike">Dislike</string>
 </resources>

@@ -19,7 +19,6 @@ public class MyMusicActivity extends BaseNavigationActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSION_REQUEST_READ_MUSIC);
         }
-
         super.onCreate(savedInstanceState);
     }
 
@@ -28,10 +27,9 @@ public class MyMusicActivity extends BaseNavigationActivity {
         if (requestCode == PERMISSION_REQUEST_READ_MUSIC) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initFragment(MyMusicFragment.newInstance());
-                setContentView(R.layout.activity_mymusic);
             } else {
                 Toast.makeText(this, "Read storage permission request was denied.", Toast.LENGTH_LONG).show();
-                setContentView(R.layout.activity_error);
+                initFragment(ErrorFragment.newInstance());
             }
         }
     }

@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 // TODO check if it needs to be immutable
@@ -25,6 +27,10 @@ public final class Room {
     private final String mImageUrl;
 
     private final boolean mIsOpen;
+
+    private List<FirebaseUser> mUsers = new ArrayList<>();
+
+    private List<Track> mTracks = new ArrayList<>();
 
 
     public Room(@Nullable FirebaseUser author, @Nullable String title, @Nullable String description, boolean isOpen) {
@@ -71,5 +77,21 @@ public final class Room {
     public boolean isEmpty() {
         return (mTitle == null || "".equals(mTitle)) &&
                 (mDescription == null || "".equals(mDescription));
+    }
+
+    public List<FirebaseUser> getUsers() {
+        return mUsers;
+    }
+
+    public void setUsers(List<FirebaseUser> mUsers) {
+        this.mUsers = mUsers;
+    }
+
+    public List<Track> getTracks() {
+        return mTracks;
+    }
+
+    public void setTracks(List<Track> mTracks) {
+        this.mTracks = mTracks;
     }
 }
