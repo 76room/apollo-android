@@ -12,6 +12,7 @@ import com.google.firebase.auth.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Alexey on 2/3/18.
@@ -138,5 +139,24 @@ public class FirebaseUserMock extends FirebaseUser {
     @Override
     public FirebaseUserMetadata getMetadata() {
         return null;
+    }
+
+    public void setName(String mName) {
+        this.mName = mName;
+    }
+
+    public void setPhotoUrl(Uri mPhotoUrl) {
+        this.mPhotoUrl = mPhotoUrl;
+    }
+
+    public static FirebaseUserMock userFromMap(Map<String, Object> userMap) {
+        FirebaseUserMock user = new FirebaseUserMock();
+        if (userMap.containsKey("displayName")) {
+            user.setName((String) userMap.get("displayName"));
+        }
+        if (userMap.containsKey("photoUrl")) {
+            user.setPhotoUrl(Uri.parse((String) userMap.get("photoUrl")));
+        }
+        return user;
     }
 }
