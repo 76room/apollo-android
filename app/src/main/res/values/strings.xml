@@ -40,6 +40,7 @@
     <string name="details_users">Users</string>
     <string name="details_playlist">Playlist</string>
     <string name="details_location">Location</string>
+    <string name="details_recommendations">Recommendations</string>
     <string name="room_image_description">Room image</string>
     <string name="location_icon_description">Location</string>
     <string name="heart_icon_description">Like</string>

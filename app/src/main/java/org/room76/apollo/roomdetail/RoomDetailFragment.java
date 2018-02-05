@@ -4,13 +4,19 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,6 +38,8 @@ import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
 import org.room76.apollo.util.Injection;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.room76.apollo.util.Utils.convertTime;
@@ -39,7 +47,7 @@ import static org.room76.apollo.util.Utils.convertTime;
 /**
  * Main UI for the room detail screen.
  */
-public class RoomDetailFragment extends Fragment implements RoomDetailContract.View, SwipeItemTouchHelper.RecyclerItemTouchHelperListener{
+public class RoomDetailFragment extends Fragment implements RoomDetailContract.View, SwipeItemTouchCallback.RecyclerItemTouchHelperListener{
 
     public static final String ARGUMENT_ROOM_ID = "ROOM_ID";
 
@@ -55,15 +63,21 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     private RecyclerView mTracksRecyclerView;
 
+    private RecyclerView mTracksRecomRecyclerView;
+
     private UsersAdapter mUserAdapter;
 
     private TrackAdapter mTrackAdapter;
 
     private View mProgressBar;
 
+    private MenuItem mItemShare;
+
     private ImageView mIsOpen;
 
-    private List<Track> mTracks;
+    private SortedList<Track> mTracks;
+
+    private List<Track> mRecommendations;
 
 //    private ImageButton mAuthorImage;
 
@@ -82,21 +96,36 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_detail, container, false);
         mDetailDescription = root.findViewById(R.id.room_detail_description);
+        setHasOptionsMenu(true);
 //        mAuthorImage = root.findViewById(R.id.room_author_image);
         mUserRecyclerView = root.findViewById(R.id.recycler_view_users);
         mTracksRecyclerView = root.findViewById(R.id.recycler_view_music);
+        mTracksRecomRecyclerView = root.findViewById(R.id.recycler_view_music_recom);
         if (getActivity() != null) {
             mHeaderImage = getActivity().findViewById(R.id.header_image);
             mDetailTitle = getActivity().findViewById(R.id.toolbar);
             mProgressBar = getActivity().findViewById(R.id.animation_view);
             mIsOpen = getActivity().findViewById(R.id.room_is_open);
+            AppBarLayout appBarLayout = getActivity().findViewById(R.id.app_bar_layout);
+            appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                @Override
+                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                    if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                        // Collapsed (make button visible and fab invisible)
+                        if (mItemShare != null) mItemShare.setVisible(true);
+                    } else if (verticalOffset == 0) {
+                        // Expanded (make fab visible and toolbar button invisible)
+//                        if (mItemShare != null) mItemShare.setVisible(false);
+                    } else {
+                        // Somewhere in between
+                        if (mItemShare != null) mItemShare.setVisible(false);
+                    }
+                }
+            });
         }
         mActionsListener = new RoomDetailPresenter(Injection.provideRoomsRepository(), this);
-        DividerItemDecoration decor = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        decor.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.dr_divider));
-        mTracksRecyclerView.addItemDecoration(decor);
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new SwipeItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mTracksRecyclerView);
+        ItemTouchHelper.SimpleCallback itemTouchCallback = new SwipeItemTouchCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchCallback).attachToRecyclerView(mTracksRecyclerView);
         return root;
     }
 
@@ -172,9 +201,54 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     @Override
     public void populateTrackList(List<Track> tracks) {
-        mTracks = tracks;
-        mTrackAdapter = new TrackAdapter(tracks);
+        List<Track> recom = new ArrayList<>();
+        recom.add(new Track("Thunder", "Imagine Dragons", 200000, "http://test"));
+        recom.add(new Track("Believer", "Imagine Dragons", 400000, "http://test"));
+        recom.add(new Track("Розовое вино", "Eлджей", 50000, "http://test"));
+        mRecommendations = recom;
+        RecommendationsAdapter adapter = new RecommendationsAdapter();
+        mTracksRecomRecyclerView.setAdapter(adapter);
+
+        mTrackAdapter = new TrackAdapter();
+        mTracks = new SortedList<>(Track.class, new SortedList.Callback<Track>() {
+            @Override
+            public int compare(Track o1, Track o2) {
+                return o1.compareTo(o2);
+            }
+
+            @Override
+            public void onChanged(int position, int count) {
+                mTrackAdapter.notifyItemRangeChanged(position, count);
+            }
+
+            @Override
+            public boolean areContentsTheSame(Track oldItem, Track newItem) {
+                return oldItem.getLikes()-oldItem.getDislikes() == newItem.getLikes()-newItem.getDislikes();
+            }
+
+            @Override
+            public boolean areItemsTheSame(Track item1, Track item2) {
+                return item1.equals(item2);
+            }
+
+            @Override
+            public void onInserted(int position, int count) {
+                mTrackAdapter.notifyItemInserted(position);
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+                mTrackAdapter.notifyItemRangeRemoved(position, count);
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+                mTrackAdapter.notifyItemMoved(fromPosition, toPosition);
+            }
+        });
+        mTracks.addAll(tracks);
         mTracksRecyclerView.setAdapter(mTrackAdapter);
+
     }
 
     @Override
@@ -191,7 +265,6 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
         mHeaderImage.setVisibility(View.VISIBLE);
 
-        // This app uses Glide for image loading
         Glide.with(this)
                 .load(imageUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -296,9 +369,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
 
-        public TrackAdapter(List<Track> users) {
-            setList(users);
-        }
+        public TrackAdapter() {}
 
         @Override
         public TrackViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -320,10 +391,13 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             viewHolder.mPrimaryTextView.setText(track.getTitle());
             viewHolder.mSecondaryTextView.setText(track.getArtist());
             viewHolder.mTimeTextView.setText(convertTime(track.getDuration()));
-        }
-
-        private void setList(List<Track> users) {
-            mTracks = users;
+            if (track.isLiked(SignInState.getInstance().getUser())) {
+                viewHolder.mLikeTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                viewHolder.mLikeImageView.setColorFilter(getResources().getColor(R.color.colorAccent));
+            } else if (track.isDisliked(SignInState.getInstance().getUser())){
+                viewHolder.mDisLikeTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                viewHolder.mDislikeImageView.setColorFilter(getResources().getColor(R.color.colorAccent));
+            }
         }
 
         @Override
@@ -332,9 +406,9 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         }
 
         public class TrackViewHolder extends RecyclerView.ViewHolder {
-            ImageView mImageView;
+            ImageView mImageView, mLikeImageView, mDislikeImageView;
             TextView mTimeTextView, mPrimaryTextView, mSecondaryTextView, mLikeTextView, mDisLikeTextView;
-            LinearLayout mBackground;
+            LinearLayout mBackground, mPlusImageView, mLikeContainer;
             ConstraintLayout mForeground;
 
             public TrackViewHolder(View itemView) {
@@ -347,8 +421,48 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
                 mDisLikeTextView = itemView.findViewById(R.id.dislike);
                 mBackground = itemView.findViewById(R.id.view_background);
                 mForeground = itemView.findViewById(R.id.view_foreground);
+                mPlusImageView = itemView.findViewById(R.id.recommendatios_container);
+                mLikeContainer = itemView.findViewById(R.id.like_container);
+                mLikeImageView = itemView.findViewById(R.id.iv_like);
+                mDislikeImageView = itemView.findViewById(R.id.iv_dislike);
             }
 
         }
     }
+
+    public class RecommendationsAdapter extends TrackAdapter {
+        public RecommendationsAdapter() {}
+
+        @Override
+        public void onBindViewHolder(TrackViewHolder viewHolder, int position) {
+            Track track = mRecommendations.get(position);
+            Glide.with(viewHolder.itemView.getContext())
+                    .load(track.getPhotoUri())
+                    .error(R.drawable.dr_gradient_3_colors)
+                    .into(viewHolder.mImageView);
+            viewHolder.mPrimaryTextView.setText(track.getTitle());
+            viewHolder.mSecondaryTextView.setText(track.getArtist());
+            viewHolder.mTimeTextView.setText(convertTime(track.getDuration()));
+            viewHolder.mLikeContainer.setVisibility(View.GONE);
+            viewHolder.mPlusImageView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_share:
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_details_options, menu);
+        mItemShare = menu.findItem(R.id.item_share);
+        mItemShare.setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
 }

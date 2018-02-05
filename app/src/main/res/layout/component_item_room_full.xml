@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="244dp"
     android:background="@color/colorPrimary"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -18,6 +19,23 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="@drawable/dr_dim_effect">
+
+                <ImageView
+                    android:id="@+id/room_detail_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/room_image_description"
+                    android:foreground="@drawable/dr_dim_effect"
+                    android:scaleType="centerCrop"
+                    android:transitionName="@string/room_image_description"
+                    tools:src="@drawable/dr_gradient_3_colors_hot" />
+            </FrameLayout>
+
+
             <ImageButton
                 android:id="@+id/room_author_image"
                 android:layout_width="60dp"
@@ -25,15 +43,6 @@
                 android:layout_margin="16dp"
                 android:background="@drawable/ic_default_user_image"
                 android:contentDescription="@string/author_image_description" />
-
-            <ImageView
-                android:id="@+id/room_detail_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0.5"
-                android:contentDescription="@string/room_image_description"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/dr_gradient_3_colors_hot" />
 
             <ImageView
                 android:id="@+id/room_is_open"
