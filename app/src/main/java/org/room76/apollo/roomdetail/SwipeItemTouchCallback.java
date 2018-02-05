@@ -3,17 +3,16 @@ package org.room76.apollo.roomdetail;
 import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 
 /**
  * Created by a.zatsepin on 03/02/2018.
  */
 
-public class SwipeItemTouchHelper  extends ItemTouchHelper.SimpleCallback {
+public class SwipeItemTouchCallback extends ItemTouchHelper.SimpleCallback {
     private RecyclerItemTouchHelperListener listener;
 
-    public SwipeItemTouchHelper(int dragDirs, int swipeDirs, RecyclerItemTouchHelperListener listener) {
+    public SwipeItemTouchCallback(int dragDirs, int swipeDirs, RecyclerItemTouchHelperListener listener) {
         super(dragDirs, swipeDirs);
         this.listener = listener;
     }
@@ -37,13 +36,10 @@ public class SwipeItemTouchHelper  extends ItemTouchHelper.SimpleCallback {
                                 RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                 int actionState, boolean isCurrentlyActive) {
         final View foregroundView = ((RoomDetailFragment.TrackAdapter.TrackViewHolder) viewHolder).mForeground;
-        final View backgroundView = ((RoomDetailFragment.TrackAdapter.TrackViewHolder) viewHolder).mBackground;
 
-        Log.v(this.getClass().getCanonicalName(),"dX = " + dX);
-        if (dX <= backgroundView.getWidth()/2 || -dX >= backgroundView.getWidth()/2) {
-            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
-        }
+        
     }
 
     @Override
@@ -59,7 +55,7 @@ public class SwipeItemTouchHelper  extends ItemTouchHelper.SimpleCallback {
         final View foregroundView = ((RoomDetailFragment.TrackAdapter.TrackViewHolder) viewHolder).mForeground;
         final View backgroundView = ((RoomDetailFragment.TrackAdapter.TrackViewHolder) viewHolder).mBackground;
 
-        if (dX <= backgroundView.getWidth()/2 || -dX >= backgroundView.getWidth()/2) {
+        if ((dX <= backgroundView.getWidth()/2&&dX>0) || (-dX <= backgroundView.getWidth()/2&&dX<0)) {
             getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
         }
