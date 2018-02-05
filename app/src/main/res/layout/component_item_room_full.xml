@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="244dp"
     android:background="@color/colorPrimary"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout

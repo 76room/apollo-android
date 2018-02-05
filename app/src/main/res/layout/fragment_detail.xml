@@ -70,6 +70,7 @@
             android:id="@+id/more_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_chevron_right" />
 
     </LinearLayout>
@@ -78,7 +79,7 @@
         android:id="@+id/recycler_view_music"
         tools:listitem="@layout/component_track_item"
         android:layout_width="match_parent"
-        android:layout_height="234dp"
+        android:layout_height="250dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:nestedScrollingEnabled="true"
@@ -109,6 +110,7 @@
             android:id="@+id/more_label_recomendations"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_chevron_right" />
 
     </LinearLayout>
@@ -117,7 +119,7 @@
         android:id="@+id/recycler_view_music_recom"
         tools:listitem="@layout/component_track_item"
         android:layout_width="match_parent"
-        android:layout_height="234dp"
+        android:layout_height="250dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:nestedScrollingEnabled="true"
