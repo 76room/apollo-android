@@ -90,6 +90,14 @@ public final class Track implements Comparable<Track>{
         return mVoted.containsKey(user) && (mVoted.get(user) == 1 || mVoted.get(user) == -1);
     }
 
+    public boolean isLiked(FirebaseUser user){
+        return mVoted.containsKey(user) && mVoted.get(user) == 1;
+    }
+
+    public boolean isDisliked(FirebaseUser user){
+        return mVoted.containsKey(user) && mVoted.get(user) == -1;
+    }
+
     @Override
     public int compareTo(@NonNull Track track) {
         if (mLikes-mDislikes < track.mLikes-track.mDislikes) {

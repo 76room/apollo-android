@@ -1,6 +1,7 @@
 package org.room76.apollo.rooms;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +42,8 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
     private RoomsContract.UserActionsListener mActionsListener;
 
     private RoomsAdapter mListAdapter;
+
+    private ActivityOptions mOptions;
 
     public RoomsFragment() {
         // Requires empty public constructor
@@ -162,11 +166,12 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
         // to show some Intent stubbing.
         Intent intent = new Intent(getContext(), RoomDetailActivity.class);
         intent.putExtra(RoomDetailActivity.EXTRA_ROOM_ID, roomId);
-        startActivity(intent);
+        if (mOptions == null) startActivity(intent);
+        else startActivity(intent, mOptions.toBundle());
     }
 
 
-    private static class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.ViewHolder> {
+    private class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.ViewHolder> {
         public static final int ITEM_TYPE_FULL = 0;
         public static final int ITEM_TYPE_WITHOUT_ROOM_IMAGE = 1;
 
@@ -290,6 +295,15 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
                 super(itemView, listener);
                 roomImage = itemView.findViewById(R.id.room_detail_image);
                 isOpen = itemView.findViewById(R.id.room_is_open);
+            }
+
+            @Override
+            public void onClick(View v) {
+                super.onClick(v);
+                Pair<View, String>[] pairs = new Pair[]{
+                        Pair.create(roomImage, getString(R.string.room_image_description)),
+                };
+                mOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity(),pairs);
             }
         }
 

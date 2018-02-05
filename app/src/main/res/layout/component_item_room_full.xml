@@ -18,14 +18,21 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/room_detail_image"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:alpha="0.5"
-                android:contentDescription="@string/room_image_description"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/dr_gradient_3_colors_hot" />
+                android:foreground="@drawable/dr_dim_effect">
+
+                <ImageView
+                    android:id="@+id/room_detail_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/room_image_description"
+                    android:foreground="@drawable/dr_dim_effect"
+                    android:scaleType="centerCrop"
+                    android:transitionName="@string/room_image_description"
+                    tools:src="@drawable/dr_gradient_3_colors_hot" />
+            </FrameLayout>
 
 
             <ImageButton
