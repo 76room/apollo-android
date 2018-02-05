@@ -38,12 +38,10 @@ public class SwipeItemTouchHelper  extends ItemTouchHelper.SimpleCallback {
                                 int actionState, boolean isCurrentlyActive) {
         final View foregroundView = ((RoomDetailFragment.TrackAdapter.TrackViewHolder) viewHolder).mForeground;
         final View backgroundView = ((RoomDetailFragment.TrackAdapter.TrackViewHolder) viewHolder).mBackground;
-
-        Log.v(this.getClass().getCanonicalName(),"dX = " + dX);
-        if (dX <= backgroundView.getWidth()/2 || -dX >= -backgroundView.getWidth()/2) {
-            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+        
+        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
-        }
+        
     }
 
     @Override
@@ -59,7 +57,7 @@ public class SwipeItemTouchHelper  extends ItemTouchHelper.SimpleCallback {
         final View foregroundView = ((RoomDetailFragment.TrackAdapter.TrackViewHolder) viewHolder).mForeground;
         final View backgroundView = ((RoomDetailFragment.TrackAdapter.TrackViewHolder) viewHolder).mBackground;
 
-        if (dX <= backgroundView.getWidth()/2 || -dX >= backgroundView.getWidth()/2) {
+        if ((dX <= backgroundView.getWidth()/2&&dX>0) || (-dX <= backgroundView.getWidth()/2&&dX<0)) {
             getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                     actionState, isCurrentlyActive);
         }
