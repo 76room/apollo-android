@@ -39,6 +39,16 @@ android {
     }
 }
 
+//configurations.all {
+//    resolutionStrategy {
+//        force "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+//        force "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+//        force "com.android.support:design:$rootProject.supportLibraryVersion"
+//        force "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+//        force "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+//    }
+//}
+
 dependencies {
     // App's dependencies, including test
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.kotlin_version"
