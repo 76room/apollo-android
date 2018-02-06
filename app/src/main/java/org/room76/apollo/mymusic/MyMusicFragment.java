@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -195,8 +196,13 @@ public class MyMusicFragment extends Fragment implements MyMusicContract.View {
     };
 
     @Override
-    public void showMusic(List<Track> tracks) {
-        mListAdapter.replaceData(tracks);
+    public void showMusic(final List<Track> tracks) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mListAdapter.replaceData(tracks);
+            }
+        });
     }
 
     @Override
@@ -251,6 +257,11 @@ public class MyMusicFragment extends Fragment implements MyMusicContract.View {
         playTrack();
     }
 
+    @Override
+    public void showProgressIndicator(boolean active) {
+
+    }
+
     private static class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.TrackViewHolder> {
 
         private List<Track> mTracks;
@@ -301,7 +312,7 @@ public class MyMusicFragment extends Fragment implements MyMusicContract.View {
         }
 
         public class TrackViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-            ImageView mImageView;
+            ImageView mImageView, mMoreOptions;
             TextView mTimeTextView, mPrimaryTextView, mSecondaryTextView;
 
             private TrackItemListener mItemListener;
@@ -313,8 +324,11 @@ public class MyMusicFragment extends Fragment implements MyMusicContract.View {
                 mTimeTextView = itemView.findViewById(R.id.track_timeview);
                 mPrimaryTextView = itemView.findViewById(R.id.track_title);
                 mSecondaryTextView = itemView.findViewById(R.id.track_description);
-                itemView.findViewById(R.id.container).setVisibility(View.GONE);
-                itemView.findViewById(R.id.view_foreground).setVisibility(View.GONE);
+                itemView.findViewById(R.id.view_background).setVisibility(View.GONE);
+                itemView.findViewById(R.id.like_container).setVisibility(View.GONE);
+                itemView.findViewById(R.id.recommendatios_container).setVisibility(View.VISIBLE);
+                mMoreOptions = itemView.findViewById(R.id.action_button);
+                mMoreOptions.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(),R.drawable.ic_more));
                 itemView.setOnClickListener(this);
             }
 

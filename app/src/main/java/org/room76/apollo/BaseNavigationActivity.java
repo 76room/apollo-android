@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
     private ImageView mUserImage;
     private TextView mUserEmail;
     private Fragment mFragment;
+    protected FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
         headerview.setOnClickListener(this);
         mUserEmail = headerview.findViewById(R.id.user_email);
         mUserImage = headerview.findViewById(R.id.user_image);
+        mFab = findViewById(R.id.fab_add_rooms);
         navigationView.setItemIconTintList(null);
         setupDrawerContent(navigationView);
 

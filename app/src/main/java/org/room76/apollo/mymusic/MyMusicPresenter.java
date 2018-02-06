@@ -9,6 +9,7 @@ import org.room76.apollo.model.Track;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,50 +26,58 @@ public class MyMusicPresenter implements MyMusicContract.UserActionsListener {
 
     @Override
     public void loadMusic() {
-        final String myMusicPath = Environment.getExternalStorageDirectory() + "/";
-        ArrayList<File> audioFiles = getAudioFiles(myMusicPath);
+        mMyMusicView.showProgressIndicator(true);
 
-        if (audioFiles.isEmpty()) {
-            return;
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String myMusicPath = Environment.getExternalStorageDirectory() + "/";
+                List<File> audioFiles = getAudioFiles(myMusicPath);
 
-        ArrayList<Track> tracks = new ArrayList<>();
-        for (File file:audioFiles) {
-            MediaMetadataRetriever md = new MediaMetadataRetriever();
-            md.setDataSource(file.getPath());
-            String artist = md.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-            String title = md.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-                int duration = Integer.parseInt(md.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+                if (audioFiles.isEmpty()) {
+                    return;
+                }
 
-            if (TextUtils.isEmpty(artist)) {
-                artist = "";
+                List<Track> tracks = new ArrayList<>();
+                for (File file:audioFiles) {
+                    MediaMetadataRetriever md = new MediaMetadataRetriever();
+                    md.setDataSource(file.getPath());
+                    String artist = md.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                    String title = md.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+                    int duration = Integer.parseInt(md.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+
+                    if (TextUtils.isEmpty(artist)) {
+                        artist = "";
+                    }
+                    if (TextUtils.isEmpty(title)) {
+                        title = file.getName();
+                    }
+
+                    Track track = new Track(title, artist, duration, file.getPath());
+                    tracks.add(track);
+
+                    mMyMusicView.showProgressIndicator(false);
+                    mMyMusicView.showMusic(tracks);
+                }
+
             }
-            if (TextUtils.isEmpty(title)) {
-                title = file.getName();
-            }
-
-            Track track = new Track(title, artist, duration, file.getPath());
-            tracks.add(track);
-        }
-
-        mMyMusicView.showMusic(tracks);
+        }).start();
     }
 
-    ArrayList<File> getAudioFiles(String rootPath) {
-        ArrayList<File> fileList = new ArrayList<>();
-
+    private List<File> getAudioFiles(String rootPath) {
+        List<File> fileList = new ArrayList<>();
         try {
             File rootFolder = new File(rootPath);
             File[] files = rootFolder.listFiles();
             for (File file : files) {
                 if (file.isDirectory()) {
-                    ArrayList<File> moreFiles = getAudioFiles(file.getAbsolutePath());
+                    List<File> moreFiles = getAudioFiles(file.getAbsolutePath());
                     if (moreFiles != null) {
                         fileList.addAll(moreFiles);
                     } else {
                         break;
                     }
-                } else if (file.getName().endsWith(".mp3")) {
+                } else if (file.getName().endsWith(".mp3")) { //TODO add other formats
                     fileList.add(file);
                 }
             }
