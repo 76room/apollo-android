@@ -29,6 +29,7 @@ import org.room76.apollo.rooms.RoomsActivity;
 import org.room76.apollo.signin.SignInActivity;
 import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.BorderTransform;
+import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
 
 /**
@@ -179,7 +180,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
                     .load(user.getPhotoUrl())
                     .error(R.drawable.ic_default_user_image)
                     .override(100, 100)
-                    .transform(new BorderTransform(getApplicationContext()))
+                    .transform(new CircleTransform(getApplicationContext()))
                     .centerCrop()
                     .into(mUserImage);
         }

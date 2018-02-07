@@ -166,8 +166,12 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
         // to show some Intent stubbing.
         Intent intent = new Intent(getContext(), RoomDetailActivity.class);
         intent.putExtra(RoomDetailActivity.EXTRA_ROOM_ID, roomId);
-        if (mOptions == null) startActivity(intent);
-        else startActivity(intent, mOptions.toBundle());
+        if (mOptions == null) {
+            startActivity(intent);
+        } else {
+            startActivity(intent, mOptions.toBundle());
+            mOptions = null;
+        }
     }
 
 
