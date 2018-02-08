@@ -166,8 +166,12 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
         // to show some Intent stubbing.
         Intent intent = new Intent(getContext(), RoomDetailActivity.class);
         intent.putExtra(RoomDetailActivity.EXTRA_ROOM_ID, roomId);
-        if (mOptions == null) startActivity(intent);
-        else startActivity(intent, mOptions.toBundle());
+        if (mOptions == null) {
+            startActivity(intent);
+        } else {
+            startActivity(intent, mOptions.toBundle());
+            mOptions = null;
+        }
     }
 
 
@@ -299,11 +303,11 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
             @Override
             public void onClick(View v) {
-                super.onClick(v);
                 Pair<View, String>[] pairs = new Pair[]{
                         Pair.create(roomImage, getString(R.string.room_image_description)),
                 };
                 mOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity(),pairs);
+                super.onClick(v);
             }
         }
 

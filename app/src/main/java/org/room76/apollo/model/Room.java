@@ -18,7 +18,7 @@ public final class Room {
     private final String mId;
 
     @Nullable
-    private final FirebaseUser mAuthor;
+    private final User mAuthor;
     @Nullable
     private final String mTitle;
     @Nullable
@@ -28,16 +28,16 @@ public final class Room {
 
     private final boolean mIsOpen;
 
-    private List<FirebaseUser> mUsers = new ArrayList<>();
+    private List<User> mUsers = new ArrayList<>();
 
     private List<Track> mTracks = new ArrayList<>();
 
 
-    public Room(@Nullable FirebaseUser author, @Nullable String title, @Nullable String description, boolean isOpen) {
+    public Room(@Nullable User author, @Nullable String title, @Nullable String description, boolean isOpen) {
         this(author, title, description, isOpen, null);
     }
 
-    public Room(@Nullable FirebaseUser author, @Nullable String title, @Nullable String description, boolean isOpen, @Nullable String imageUrl) {
+    public Room(@Nullable User author, @Nullable String title, @Nullable String description, boolean isOpen, @Nullable String imageUrl) {
         mId = UUID.randomUUID().toString();
         mAuthor = author;
         mTitle = title;
@@ -66,7 +66,7 @@ public final class Room {
     }
 
     @Nullable
-    public FirebaseUser getAuthor() {
+    public User getAuthor() {
         return mAuthor;
     }
 
@@ -79,11 +79,11 @@ public final class Room {
                 (mDescription == null || "".equals(mDescription));
     }
 
-    public List<FirebaseUser> getUsers() {
+    public List<User> getUsers() {
         return mUsers;
     }
 
-    public void setUsers(List<FirebaseUser> mUsers) {
+    public void setUsers(List<User> mUsers) {
         this.mUsers = mUsers;
     }
 

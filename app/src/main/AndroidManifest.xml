@@ -15,6 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".rooms.RoomsActivity"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.OverlapSystemBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +24,12 @@
         </activity>
         <activity android:name=".roomdetail.RoomDetailActivity" />
         <activity android:name=".addroom.AddRoomActivity" />
-        <activity android:name=".signin.SignInActivity" />
-        <activity android:name=".mymusic.MyMusicActivity" />
+        <activity
+            android:name=".signin.SignInActivity"
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".mymusic.MyMusicActivity"
+            android:launchMode="singleTask"/>
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
@@ -21,13 +22,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.mymusic.MyMusicActivity;
 import org.room76.apollo.rooms.RoomsActivity;
 import org.room76.apollo.signin.SignInActivity;
 import org.room76.apollo.signin.SignInState;
-import org.room76.apollo.util.BorderTransform;
+import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
 
 /**
@@ -35,10 +39,11 @@ import org.room76.apollo.util.EspressoIdlingResource;
  */
 
 public abstract class BaseNavigationActivity extends AppCompatActivity implements View.OnClickListener {
-    private DrawerLayout mDrawerLayout;
-    private ImageView mUserImage;
-    private TextView mUserEmail;
-    private Fragment mFragment;
+    protected DrawerLayout mDrawerLayout;
+    protected ImageView mUserImage;
+    protected TextView mUserEmail;
+    protected Fragment mFragment;
+    protected FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
         headerview.setOnClickListener(this);
         mUserEmail = headerview.findViewById(R.id.user_email);
         mUserImage = headerview.findViewById(R.id.user_image);
+        mFab = findViewById(R.id.fab_add_rooms);
         navigationView.setItemIconTintList(null);
         setupDrawerContent(navigationView);
 
@@ -166,19 +172,27 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
 
     private void setupUserData() {
         if (SignInState.getInstance().getUser() == null) {
-            mUserEmail.setText("Please login in your account");
+            mUserEmail.setText(R.string.navbar_login_hint);
             mUserImage.setImageDrawable(getDrawable(R.drawable.ic_default_user_image));
         } else if (SignInState.getInstance().getUser() != null) {
             FirebaseUser user = SignInState.getInstance().getUser();
             mUserEmail.setText(user.getDisplayName() == null || user.getDisplayName().isEmpty()
                     ? user.getEmail() : user.getDisplayName());
+
+            EspressoIdlingResource.increment();
+
             Glide.with(getApplicationContext())
                     .load(user.getPhotoUrl())
                     .error(R.drawable.ic_default_user_image)
-                    .override(100, 100)
-                    .transform(new BorderTransform(getApplicationContext()))
-                    .centerCrop()
-                    .into(mUserImage);
+                    .transform(new CircleTransform(this))
+                    .into(new GlideDrawableImageViewTarget(mUserImage) {
+                        @Override
+                        public void onResourceReady(GlideDrawable resource,
+                                                    GlideAnimation<? super GlideDrawable> animation) {
+                            super.onResourceReady(resource, animation);
+                            EspressoIdlingResource.decrement(); // App is idle.
+                        }
+                    });
         }
     }
 

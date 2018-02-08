@@ -13,7 +13,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
  * Created by a.zatsepin on 04/02/2018.
  */
 
-public class ShadowTransform extends BitmapTransformation {
+public final class ShadowTransform extends BitmapTransformation {
     private int mShadowWidth;
     private int mColor;
 
