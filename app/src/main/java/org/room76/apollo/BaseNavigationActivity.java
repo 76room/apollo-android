@@ -22,6 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.mymusic.MyMusicActivity;
@@ -31,16 +34,17 @@ import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.BorderTransform;
 import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
+import org.room76.apollo.util.ShadowTransform;
 
 /**
  * Created by a.zatsepin on 03/02/2018.
  */
 
 public abstract class BaseNavigationActivity extends AppCompatActivity implements View.OnClickListener {
-    private DrawerLayout mDrawerLayout;
-    private ImageView mUserImage;
-    private TextView mUserEmail;
-    private Fragment mFragment;
+    protected DrawerLayout mDrawerLayout;
+    protected ImageView mUserImage;
+    protected TextView mUserEmail;
+    protected Fragment mFragment;
     protected FloatingActionButton mFab;
 
     @Override
@@ -176,13 +180,21 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
             FirebaseUser user = SignInState.getInstance().getUser();
             mUserEmail.setText(user.getDisplayName() == null || user.getDisplayName().isEmpty()
                     ? user.getEmail() : user.getDisplayName());
+
+            EspressoIdlingResource.increment();
+
             Glide.with(getApplicationContext())
                     .load(user.getPhotoUrl())
                     .error(R.drawable.ic_default_user_image)
-                    .override(100, 100)
-                    .transform(new CircleTransform(getApplicationContext()))
-                    .centerCrop()
-                    .into(mUserImage);
+                    .transform(new CircleTransform(this))
+                    .into(new GlideDrawableImageViewTarget(mUserImage) {
+                        @Override
+                        public void onResourceReady(GlideDrawable resource,
+                                                    GlideAnimation<? super GlideDrawable> animation) {
+                            super.onResourceReady(resource, animation);
+                            EspressoIdlingResource.decrement(); // App is idle.
+                        }
+                    });
         }
     }
 
