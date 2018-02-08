@@ -6,15 +6,13 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.room76.apollo.model.Room
-import org.room76.apollo.model.RoomsRepository
 
 import java.io.IOException
 
 import org.mockito.Matchers.any
-import org.mockito.Matchers.anyString
 import org.mockito.Matchers.contains
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
+import org.room76.apollo.model.Repository
 
 /**
  * Unit tests for the implementation of [AddRoomPresenter].
@@ -22,7 +20,7 @@ import org.mockito.Mockito.`when`
 class AddRoomPresenterTest {
 
     @Mock
-    private val mRoomsRepository: RoomsRepository? = null
+    private val mRoomsRepository: Repository<Room>? = null
 
     @Mock
     private val mAddRoomView: AddRoomContract.View? = null
@@ -45,7 +43,7 @@ class AddRoomPresenterTest {
         mAddRoomsPresenter!!.saveRoom("New Room Title", "Some Room Description")
 
         // Then a room is,
-        verify<RoomsRepository>(mRoomsRepository).saveRoom(any(Room::class.java)) // saved to the model
+        verify<Repository<Room>>(mRoomsRepository).saveItem(any(Room::class.java)) // saved to the model
         verify<AddRoomContract.View>(mAddRoomView).showRoomsList() // shown in the UI
     }
 

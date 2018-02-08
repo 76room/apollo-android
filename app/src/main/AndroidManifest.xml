@@ -25,8 +25,11 @@
         <activity android:name=".roomdetail.RoomDetailActivity" />
         <activity android:name=".addroom.AddRoomActivity" />
         <activity
-            android:name=".signin.SignInActivity" />
-        <activity android:name=".mymusic.MyMusicActivity" />
+            android:name=".signin.SignInActivity"
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".mymusic.MyMusicActivity"
+            android:launchMode="singleTask"/>
     </application>
 
 </manifest>

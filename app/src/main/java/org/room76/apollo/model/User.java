@@ -32,10 +32,12 @@ public final class User {
     }
 
     public User(FirebaseUser user) {
-        this.mName = user.getDisplayName() == null || user.getDisplayName().isEmpty()
-                ? user.getEmail() : user.getDisplayName();
-        this.mPhotoUrl = user.getPhotoUrl();
-        mFirebaseUserId = user.getUid();
+        if (user != null) {
+            this.mName = user.getDisplayName() == null || user.getDisplayName().isEmpty()
+                    ? user.getEmail() : user.getDisplayName();
+            this.mPhotoUrl = user.getPhotoUrl();
+            mFirebaseUserId = user.getUid();
+        }
     }
 
     public User(String name, String photoUrl) {

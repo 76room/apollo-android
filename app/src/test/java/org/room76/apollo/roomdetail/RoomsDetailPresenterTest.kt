@@ -7,10 +7,10 @@ import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.room76.apollo.model.Room
-import org.room76.apollo.model.RoomsRepository
 
 import org.mockito.Matchers.eq
 import org.mockito.Mockito.verify
+import org.room76.apollo.model.Repository
 import org.room76.apollo.model.User
 
 /**
@@ -19,7 +19,7 @@ import org.room76.apollo.model.User
 class RoomsDetailPresenterTest {
 
     @Mock
-    private val mRoomsRepository: RoomsRepository? = null
+    private val mRoomsRepository: Repository<Room>? = null
 
     @Mock
     private val mRoomDetailView: RoomDetailContract.View? = null
@@ -29,7 +29,7 @@ class RoomsDetailPresenterTest {
      * perform further actions or assertions on them.
      */
     @Captor
-    private val mGetRoomCallbackCaptor: ArgumentCaptor<RoomsRepository.GetRoomCallback>? = null
+    private val mGetRoomCallbackCaptor: ArgumentCaptor<Repository.GetCallback<Room>>? = null
 
     private var mRoomsDetailsPresenter: RoomDetailPresenter? = null
 
@@ -52,12 +52,12 @@ class RoomsDetailPresenterTest {
         mRoomsDetailsPresenter!!.openRoom(room.id)
 
         // Then room is loaded from model, callback is captured and progress indicator is shown
-        verify<RoomsRepository>(mRoomsRepository).getRoom(eq(room.id), mGetRoomCallbackCaptor!!.capture())
+        verify<Repository<Room>>(mRoomsRepository).getItem(eq(room.id), mGetRoomCallbackCaptor!!.capture())
 
         verify<RoomDetailContract.View>(mRoomDetailView).setProgressIndicator(true)
 
         // When room is finally loaded
-        mGetRoomCallbackCaptor.value.onRoomLoaded(room) // Trigger callback
+        mGetRoomCallbackCaptor.value.onLoaded(room) // Trigger callback
 
         // Then progress indicator is hidden and title and description are shown in UI
         verify<RoomDetailContract.View>(mRoomDetailView).setProgressIndicator(false)
@@ -76,10 +76,10 @@ class RoomsDetailPresenterTest {
 
         verify<RoomDetailContract.View>(mRoomDetailView).setProgressIndicator(true)
 
-        verify<RoomsRepository>(mRoomsRepository).getRoom(eq(INVALID_ID), mGetRoomCallbackCaptor!!.capture())
+        verify<Repository<Room>>(mRoomsRepository).getItem(eq(INVALID_ID), mGetRoomCallbackCaptor!!.capture())
 
         // When room is finally loaded
-        mGetRoomCallbackCaptor.value.onRoomLoaded(null) // Trigger callback
+        mGetRoomCallbackCaptor.value.onLoaded(null) // Trigger callback
 
         // Then progress indicator is hidden and missing room UI is shown
 

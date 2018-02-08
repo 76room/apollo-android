@@ -8,12 +8,12 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.room76.apollo.model.Room
-import org.room76.apollo.model.RoomsRepository
 
 import java.util.ArrayList
 
 import org.mockito.Matchers.any
 import org.mockito.Mockito.verify
+import org.room76.apollo.model.Repository
 import org.room76.apollo.model.User
 
 /**
@@ -22,7 +22,7 @@ import org.room76.apollo.model.User
 class RoomsPresenterTest {
 
     @Mock
-    private val mRoomsRepository: RoomsRepository? = null
+    private val mRoomsRepository: Repository<Room>? = null
 
     @Mock
     private val mRoomsView: RoomsContract.View? = null
@@ -32,7 +32,7 @@ class RoomsPresenterTest {
      * perform further actions or assertions on them.
      */
     @Captor
-    private val mLoadRoomsCallbackCaptor: ArgumentCaptor<RoomsRepository.LoadRoomsCallback>? = null
+    private val mLoadRoomsCallbackCaptor: ArgumentCaptor<Repository.LoadCallback<Room>>? = null
 
     private var mRoomsPresenter: RoomsPresenter? = null
 
@@ -53,8 +53,8 @@ class RoomsPresenterTest {
         mRoomsPresenter!!.loadRooms(true)
 
         // Callback is captured and invoked with stubbed rooms
-        verify<RoomsRepository>(mRoomsRepository).getRooms(mLoadRoomsCallbackCaptor!!.capture())
-        mLoadRoomsCallbackCaptor.value.onRoomsLoaded(ROOMS)
+        verify<Repository<Room>>(mRoomsRepository).getItems(mLoadRoomsCallbackCaptor!!.capture())
+        mLoadRoomsCallbackCaptor.value.onLoaded(ROOMS)
 
         // Then progress indicator is hidden and rooms are shown in UI
         val inOrder = Mockito.inOrder(mRoomsView)
