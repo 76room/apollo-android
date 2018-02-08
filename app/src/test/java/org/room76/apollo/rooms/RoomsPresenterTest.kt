@@ -14,7 +14,7 @@ import java.util.ArrayList
 
 import org.mockito.Matchers.any
 import org.mockito.Mockito.verify
-import org.room76.apollo.model.FirebaseUserMock
+import org.room76.apollo.model.User
 
 /**
  * Unit tests for the implementation of [RoomsPresenter]
@@ -77,7 +77,7 @@ class RoomsPresenterTest {
     @Test
     fun clickOnRoom_ShowsDetailUi() {
         // Given a stubbed room
-        val requestedRoom = Room(FirebaseUserMock("User"), "Details Requested", "For this room", true)
+        val requestedRoom = Room(User("User"), "Details Requested", "For this room", true)
 
         // When open room details is requested
         mRoomsPresenter!!.openRoomDetails(requestedRoom)
@@ -91,8 +91,8 @@ class RoomsPresenterTest {
         private val ROOMS = ArrayList<Room>()
 
         init {
-            ROOMS.add(Room(FirebaseUserMock("User"),"Title1", "Description1", true))
-            ROOMS.add(Room(FirebaseUserMock("User"),"Title2", "Description2", true))
+            ROOMS.add(Room(User("User"),"Title1", "Description1", true))
+            ROOMS.add(Room(User("User"),"Title2", "Description2", true))
         }
 
         private val EMPTY_ROOMS = ArrayList<Room>(0)

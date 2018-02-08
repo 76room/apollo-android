@@ -13,6 +13,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.R;
 import org.room76.apollo.model.Track;
+import org.room76.apollo.model.User;
 import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
@@ -162,8 +164,10 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     }
 
     @Override
-    public void showAuthor(FirebaseUser author) {
+    public void showAuthor(User author) {
+        Log.v("temp", "show author");
 //        mAuthorImage.setVisibility(View.VISIBLE);
+
 //
 //        if (author.getPhotoUrl() != null) {
 //            // This app uses Glide for image loading
@@ -194,7 +198,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         mIsOpen.setVisibility(View.GONE);
     }
 
-    public void populateUserView(List<FirebaseUser> users) {
+    public void populateUserView(List<User> users) {
         mUserAdapter = new UsersAdapter(users);
         mUserRecyclerView.setAdapter(mUserAdapter);
     }
@@ -307,9 +311,9 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     private static class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
 
-        private List<FirebaseUser> mUsers;
+        private List<User> mUsers;
 
-        public UsersAdapter(List<FirebaseUser> users) {
+        public UsersAdapter(List<User> users) {
             setList(users);
         }
 
@@ -324,9 +328,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
         @Override
         public void onBindViewHolder(UserViewHolder viewHolder, int position) {
-            FirebaseUser user = mUsers.get(position);
-            viewHolder.mTextView.setText(user.getDisplayName() == null || user.getDisplayName().isEmpty()
-                    ? user.getEmail() : user.getDisplayName());
+            User user = mUsers.get(position);
+            viewHolder.mTextView.setText(user.getName());
 
             EspressoIdlingResource.increment();
 
@@ -345,7 +348,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
         }
 
-        private void setList(List<FirebaseUser> users) {
+        private void setList(List<User> users) {
             mUsers = users;
         }
 

@@ -5,8 +5,9 @@ import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import org.room76.apollo.model.Repository;
 import org.room76.apollo.model.Room;
-import org.room76.apollo.model.RoomsRepository;
+import org.room76.apollo.model.User;
 
 /**
  * Listens to user actions from the UI ({@link RoomDetailFragment}), retrieves the data and updates
@@ -14,11 +15,11 @@ import org.room76.apollo.model.RoomsRepository;
  */
 public class RoomDetailPresenter implements RoomDetailContract.UserActionsListener {
 
-    private final RoomsRepository mRoomsRepository;
+    private final Repository<Room> mRoomsRepository;
 
     private final RoomDetailContract.View mRoomsDetailView;
 
-    public RoomDetailPresenter(@NonNull RoomsRepository roomsRepository,
+    public RoomDetailPresenter(@NonNull Repository<Room> roomsRepository,
                                @NonNull RoomDetailContract.View roomDetailView) {
         mRoomsRepository = roomsRepository;
         mRoomsDetailView = roomDetailView;
@@ -32,14 +33,14 @@ public class RoomDetailPresenter implements RoomDetailContract.UserActionsListen
         }
 
         mRoomsDetailView.setProgressIndicator(true);
-        mRoomsRepository.getRoom(roomId, new RoomsRepository.GetRoomCallback() {
+        mRoomsRepository.getItem(roomId, new Repository.GetCallback<Room>() {
             @Override
-            public void onRoomLoaded(Room room) {
+            public void onLoaded(Room item) {
                 mRoomsDetailView.setProgressIndicator(false);
-                if (null == room) {
+                if (null == item) {
                     mRoomsDetailView.showMissingRoom();
                 } else {
-                    showRoom(room);
+                    showRoom(item);
                 }
             }
         });
@@ -49,7 +50,7 @@ public class RoomDetailPresenter implements RoomDetailContract.UserActionsListen
         String title = room.getTitle();
         String description = room.getDescription();
         String imageUrl = room.getImageUrl();
-        FirebaseUser author = room.getAuthor();
+        User author = room.getAuthor();
         boolean isOpen = room.isOpen();
 
         if (author != null) {

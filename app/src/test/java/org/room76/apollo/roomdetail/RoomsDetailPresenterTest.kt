@@ -11,7 +11,7 @@ import org.room76.apollo.model.RoomsRepository
 
 import org.mockito.Matchers.eq
 import org.mockito.Mockito.verify
-import org.room76.apollo.model.FirebaseUserMock
+import org.room76.apollo.model.User
 
 /**
  * Unit tests for the implementation of [RoomDetailPresenter]
@@ -46,7 +46,7 @@ class RoomsDetailPresenterTest {
     @Test
     fun getRoomFromRepositoryAndLoadIntoView() {
         // Given an initialized RoomDetailPresenter with stubbed room
-        val room = Room(FirebaseUserMock("User"),TITLE_TEST, DESCRIPTION_TEST, true)
+        val room = Room(User("User"),TITLE_TEST, DESCRIPTION_TEST, true)
 
         // When rooms presenter is asked to open a room
         mRoomsDetailsPresenter!!.openRoom(room.id)

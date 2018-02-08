@@ -197,12 +197,7 @@ public class MyMusicFragment extends Fragment implements MyMusicContract.View {
 
     @Override
     public void showMusic(final List<Track> tracks) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mListAdapter.replaceData(tracks);
-            }
-        });
+        mListAdapter.replaceData(tracks);
     }
 
     @Override

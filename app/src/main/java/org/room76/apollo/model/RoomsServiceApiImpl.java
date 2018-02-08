@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Implementation of the Rooms Service API that adds a latency simulating network.
  */
-public class RoomsServiceApiImpl implements RoomsServiceApi {
+public final class RoomsServiceApiImpl implements RoomsServiceApi {
 
     private static final int SERVICE_LATENCY_IN_MILLIS = 2000;
     private static final ArrayMap<String, Room> ROOMS_SERVICE_DATA =
