@@ -303,11 +303,11 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
             @Override
             public void onClick(View v) {
-                super.onClick(v);
                 Pair<View, String>[] pairs = new Pair[]{
                         Pair.create(roomImage, getString(R.string.room_image_description)),
                 };
                 mOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity(),pairs);
+                super.onClick(v);
             }
         }
 

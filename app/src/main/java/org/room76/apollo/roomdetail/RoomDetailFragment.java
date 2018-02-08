@@ -1,10 +1,13 @@
 package org.room76.apollo.roomdetail;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -63,6 +66,10 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     private RecyclerView mUserRecyclerView;
 
+    private CollapsingToolbarLayout mCollapseLayout;
+
+    private AppBarLayout mAppBarLayout;
+
     private RecyclerView mTracksRecyclerView;
 
     private RecyclerView mTracksRecomRecyclerView;
@@ -107,9 +114,10 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             mHeaderImage = getActivity().findViewById(R.id.header_image);
             mDetailTitle = getActivity().findViewById(R.id.toolbar);
             mProgressBar = getActivity().findViewById(R.id.animation_view);
+            mCollapseLayout = getActivity().findViewById(R.id.collapsing_toolbar);
             mIsOpen = getActivity().findViewById(R.id.room_is_open);
-            AppBarLayout appBarLayout = getActivity().findViewById(R.id.app_bar_layout);
-            appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            mAppBarLayout = getActivity().findViewById(R.id.app_bar_layout);
+            mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 @Override
                 public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                     if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
@@ -287,7 +295,40 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     public void hideImage() {
         mHeaderImage.setImageDrawable(null);
         mHeaderImage.setVisibility(View.GONE);
+        mIsOpen.setVisibility(View.GONE);
+        disableCollapse();
+
     }
+
+    private void disableCollapse() {
+        mCollapseLayout.setTitleEnabled(false);
+        mAppBarLayout.setExpanded(false);
+        mAppBarLayout.findViewById(R.id.header_dim).setVisibility(View.GONE);
+        mAppBarLayout.setActivated(false);
+        //you will need to hide also all content inside CollapsingToolbarLayout
+        //plus you will need to hide title of it
+        mCollapseLayout.setTitleEnabled(false);
+
+        AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) mCollapseLayout.getLayoutParams();
+        p.setScrollFlags(0);
+        mCollapseLayout.setLayoutParams(p);
+        mCollapseLayout.setActivated(false);
+
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
+        lp.height = getResources().getDimensionPixelSize(R.dimen.toolbar_height)
+                + (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? getStatusBarHeight() : 0);
+        mAppBarLayout.requestLayout();
+    }
+
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
 
     @Override
     public void showMissingRoom() {

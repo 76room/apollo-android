@@ -31,10 +31,8 @@ import org.room76.apollo.mymusic.MyMusicActivity;
 import org.room76.apollo.rooms.RoomsActivity;
 import org.room76.apollo.signin.SignInActivity;
 import org.room76.apollo.signin.SignInState;
-import org.room76.apollo.util.BorderTransform;
 import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
-import org.room76.apollo.util.ShadowTransform;
 
 /**
  * Created by a.zatsepin on 03/02/2018.
@@ -174,7 +172,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
 
     private void setupUserData() {
         if (SignInState.getInstance().getUser() == null) {
-            mUserEmail.setText("Please login in your account");
+            mUserEmail.setText(R.string.navbar_login_hint);
             mUserImage.setImageDrawable(getDrawable(R.drawable.ic_default_user_image));
         } else if (SignInState.getInstance().getUser() != null) {
             FirebaseUser user = SignInState.getInstance().getUser();
