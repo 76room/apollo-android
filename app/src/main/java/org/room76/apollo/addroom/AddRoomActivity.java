@@ -24,7 +24,7 @@ public class AddRoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_addroom);
 
         // Set up the toolbar.
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.add_room);

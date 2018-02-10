@@ -10,12 +10,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,11 +44,9 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View {
 
     private AddRoomContract.UserActionsListener mActionListener;
 
-    private TextView mTitle;
+    private EditText mTitle, mDescription;
 
-    private TextView mDescription;
-
-    private ImageView mImageThumbnail;
+    private ImageView mImageThumbnail, mOpenCamera;
 
     public static AddRoomFragment newInstance() {
         return new AddRoomFragment();
@@ -61,9 +61,7 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View {
         super.onActivityCreated(savedInstanceState);
         mActionListener = new AddRoomPresenter(Injection.provideRoomsRepository(), this);
 
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_rooms);
-        fab.setImageResource(R.drawable.ic_done);
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab_add_rooms);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,36 +76,24 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_addroom, container, false);
-        mTitle = (TextView) root.findViewById(R.id.add_room_title);
-        mDescription = (TextView) root.findViewById(R.id.add_room_description);
-        mImageThumbnail = (ImageView) root.findViewById(R.id.add_room_image_thumbnail);
-
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
-        return root;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.take_picture:
+        mTitle = root.findViewById(R.id.add_room_title);
+        mDescription = root.findViewById(R.id.add_room_description);
+        mImageThumbnail = root.findViewById(R.id.add_room_image_thumbnail);
+        mOpenCamera = root.findViewById(R.id.open_camera);
+        mOpenCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 try {
                     mActionListener.takePicture();
-                } catch (IOException ioe) {
-                    if (getView() != null) {
-                        Snackbar.make(getView(), getString(R.string.take_picture_error),
-                                Snackbar.LENGTH_LONG).show();
-                    }
+                } catch (IOException e) {
+                    showImageError();
                 }
-                return true;
-        }
-        return false;
-    }
+            }
+        });
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_addroom_options_menu_actions, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+        setRetainInstance(true);
+//        mActionListener.takePicture();
+        return root;
     }
 
     @Override
@@ -137,7 +123,7 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View {
 
     @Override
     public void showImagePreview(@NonNull String imageUrl) {
-        mImageThumbnail.setVisibility(View.VISIBLE);
+        mOpenCamera.setVisibility(View.GONE);
 
         // The image is loaded in a different thread so in order to UI-test this, an idling resource
         // is used to specify when the app is idle.

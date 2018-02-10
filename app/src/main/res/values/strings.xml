@@ -4,8 +4,8 @@
     <string name="room_header">Room</string>
     <string name="add_room">New Room</string>
 
-    <string name="title_hint">Enter title here.</string>
-    <string name="description_hint">Enter description here.</string>
+    <string name="title_hint">Title</string>
+    <string name="description_hint">Description</string>
     <string name="empty_room_message">Room cannot be empty</string>
     <string name="successfully_saved_room_message">Room saved</string>
     <string name="cannot_connect_to_camera_message">Cannot connect to camera</string>
@@ -51,4 +51,11 @@
 
     <string name="like">Like</string>
     <string name="dislike">Dislike</string>
+
+    <!--add rooms-->
+    <string name="add_location_publicity">Public location</string>
+    <string name="add_location_publicity_secondary">Show room location on details view</string>
+    <string name="add_location_limit_primary">Location limit</string>
+    <string name="add_location_limit_secondary">Use limit for new user connection locality</string>
+
 </resources>
