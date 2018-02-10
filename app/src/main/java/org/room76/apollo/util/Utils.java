@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
  * Created by a.zatsepin on 03/02/2018.
  */
 
-public class Utils {
+public final class Utils {
 
     @SuppressLint("DefaultLocale")
     public static String convertTime(int time) {

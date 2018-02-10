@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.view.View;
 import android.widget.Toast;
 
 import org.room76.apollo.BaseNavigationActivity;
@@ -20,6 +21,7 @@ public class MyMusicActivity extends BaseNavigationActivity {
                     PERMISSION_REQUEST_READ_MUSIC);
         }
         super.onCreate(savedInstanceState);
+        mFab.setVisibility(View.GONE);
     }
 
     @Override

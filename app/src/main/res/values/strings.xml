@@ -16,6 +16,7 @@
     <string name="navigation_view_header_title">sample@gmail.com</string>
 
     <!--navbar-->
+    <string name="navbar_login_hint">Please login in your account</string>
     <string name="navbar_my_rooms">My rooms</string>
     <string name="navbar_find_room">Find room</string>
     <string name="navbar_my_music">My music</string>

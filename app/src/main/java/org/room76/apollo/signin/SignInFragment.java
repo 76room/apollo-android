@@ -150,6 +150,7 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
 
     public void handleSignOut() {
         if (mActionsListener != null) {
+            SignInState.getInstance().setUser(null);
             mActionsListener.signOut();
             getActivity().setResult(RESULT_OK);
             getActivity().finish();
@@ -158,6 +159,7 @@ public class SignInFragment extends Fragment implements SignInContract.View, Vie
 
     private GoogleSignInClient buildGoogleClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);

@@ -2,10 +2,10 @@ package org.room76.apollo.addroom;
 
 import android.support.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseUser;
-
+import org.room76.apollo.model.Repository;
 import org.room76.apollo.model.Room;
-import org.room76.apollo.model.RoomsRepository;
+import org.room76.apollo.model.User;
+import org.room76.apollo.signin.SignInState;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,13 +19,13 @@ import java.util.Date;
 public class AddRoomPresenter implements AddRoomContract.UserActionsListener {
 
     @NonNull
-    private final RoomsRepository mRoomsRepository;
+    private final Repository<Room> mRoomsRepository;
     @NonNull
     private final AddRoomContract.View mAddRoomView;
 
-    private File mImageFile = new File("/") ;
+    private File mImageFile;
 
-    public AddRoomPresenter(@NonNull RoomsRepository roomsRepository,
+    public AddRoomPresenter(@NonNull Repository<Room> roomsRepository,
                             @NonNull AddRoomContract.View addRoomView) {
         mRoomsRepository = roomsRepository;
         mAddRoomView = addRoomView;
@@ -34,18 +34,18 @@ public class AddRoomPresenter implements AddRoomContract.UserActionsListener {
     @Override
     public void saveRoom(String title, String description) {
         String imageUrl = null;
-        if (mImageFile.exists()) {
+        if (mImageFile != null && mImageFile.exists()) {
             imageUrl = mImageFile.getPath();
         }
-        // TODO add author and isOpen filling
-        FirebaseUser author = null;
+
+        User author = new User(SignInState.getInstance().getUser());
         boolean isOpen = true;
 
         Room newRoom = new Room(author, title, description, isOpen, imageUrl);
         if (newRoom.isEmpty()) {
             mAddRoomView.showEmptyRoomError();
         } else {
-            mRoomsRepository.saveRoom(newRoom);
+            mRoomsRepository.saveItem(newRoom);
             mAddRoomView.showRoomsList();
         }
     }
@@ -53,8 +53,9 @@ public class AddRoomPresenter implements AddRoomContract.UserActionsListener {
     @Override
     public void takePicture() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "Apollo/JPEG_" + timeStamp + "_";
 //        mImageFile.create(imageFileName, ".jpg");
+        mImageFile = new File(imageFileName);
         mAddRoomView.openCamera(mImageFile.getPath());
     }
 

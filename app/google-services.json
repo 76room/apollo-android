@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "938925467677-mkr8ppkur3hjk1p1vpe9t1hh983j0cle.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.room76.apollo",
+            "certificate_hash": "1b2da2a61d928d91d004589597511e4ab75d85f2"
+          }
+        },
+        {
           "client_id": "938925467677-m5055rkc2avn9i9fh2gnuon6nkog1n99.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "938925467677-m5055rkc2avn9i9fh2gnuon6nkog1n99.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
