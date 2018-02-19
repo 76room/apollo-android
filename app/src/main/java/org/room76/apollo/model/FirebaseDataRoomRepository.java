@@ -2,6 +2,7 @@ package org.room76.apollo.model;
 
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -15,23 +16,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FirebaseDataRoomRepository implements RoomsRepository {
+public class FirebaseDataRoomRepository implements Repository<Room> {
+    private static final String TAG = FirebaseDataRoomRepository.class.getClass().getSimpleName();
     private DatabaseReference REFERENCE = FirebaseDatabase.getInstance().getReference();
 
     @Override
-    public void getRooms(@NonNull final LoadRoomsCallback callback) {
+    public void getItems(@NonNull final LoadCallback<Room> callback) {
+        List<Room> result = new ArrayList<>();
         Query q = REFERENCE.child("Rooms");
-        q.addValueEventListener(new ValueEventListener() {
+        q.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> roomsMap = (Map<String, Object>) dataSnapshot.getValue();
-                List<Room> result = new ArrayList<>();
-                for (String k : roomsMap.keySet()) {
-                    Map<String, Object> roomMap = (Map<String, Object>) roomsMap.get(k);
-                    Room room = Room.roomFromMap(roomMap);
-                    result.add(room);
-                }
-                callback.onRoomsLoaded(result);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -42,26 +53,24 @@ public class FirebaseDataRoomRepository implements RoomsRepository {
     }
 
     @Override
-    public void getRoom(@NonNull final String roomId, @NonNull final GetRoomCallback callback) {
+    public void getItem(@NonNull final String roomId, @NonNull final GetCallback<Room> callback) {
         Query q = REFERENCE.child("Rooms").child(roomId);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                callback.onRoomLoaded(Room.roomFromMap((Map<String, Object>) dataSnapshot.getValue()));
-
-
+                callback.onLoaded(dataSnapshot.getValue(Room.class));
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e(TAG,databaseError.getMessage());
             }
         });
     }
 
     @Override
-    public void saveRoom(@NonNull Room room) {
-        REFERENCE.child("Rooms").child(room.getId()).setValue(room);
+    public void saveItem(@NonNull Room item) {
+        REFERENCE.child("Rooms").child(item.getId()).setValue(item);
     }
 
     @Override
