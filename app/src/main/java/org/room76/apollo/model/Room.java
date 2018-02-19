@@ -4,46 +4,40 @@ import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+// TODO check if it needs to be immutable
 
 /**
  * Immutable model class for a Room.
  */
 public final class Room {
 
-    private String mId;
+    private final String mId;
 
     @Nullable
-    private FirebaseUser mAuthor;
+    private final User mAuthor;
     @Nullable
-    private String mTitle;
+    private final String mTitle;
     @Nullable
-    private String mDescription;
+    private final String mDescription;
     @Nullable
-    private String mImageUrl;
+    private final String mImageUrl;
 
-    private boolean mIsOpen;
+    private final boolean mIsOpen;
 
-    private List<FirebaseUser> mUsers = new ArrayList<>();
+    private List<User> mUsers = new ArrayList<>();
 
     private List<Track> mTracks = new ArrayList<>();
 
-    public Room() {
-    }
 
-
-
-    public Room(@Nullable FirebaseUser author, @Nullable String title, @Nullable String description, boolean isOpen) {
+    public Room(@Nullable User author, @Nullable String title, @Nullable String description, boolean isOpen) {
         this(author, title, description, isOpen, null);
     }
 
-    public Room(@Nullable FirebaseUser author, @Nullable String title, @Nullable String description, boolean isOpen, @Nullable String imageUrl) {
+    public Room(@Nullable User author, @Nullable String title, @Nullable String description, boolean isOpen, @Nullable String imageUrl) {
         mId = UUID.randomUUID().toString();
         mAuthor = author;
         mTitle = title;
@@ -72,7 +66,7 @@ public final class Room {
     }
 
     @Nullable
-    public FirebaseUser getAuthor() {
+    public User getAuthor() {
         return mAuthor;
     }
 
@@ -85,35 +79,11 @@ public final class Room {
                 (mDescription == null || "".equals(mDescription));
     }
 
-    public void setId(String mId) {
-        this.mId = mId;
-    }
-
-    public void setAuthor(@Nullable FirebaseUser mAuthor) {
-        this.mAuthor = mAuthor;
-    }
-
-    public void setTitle(@Nullable String mTitle) {
-        this.mTitle = mTitle;
-    }
-
-    public void setDescription(@Nullable String mDescription) {
-        this.mDescription = mDescription;
-    }
-
-    public void setImageUrl(@Nullable String mImageUrl) {
-        this.mImageUrl = mImageUrl;
-    }
-
-    public void setIsOpen(boolean mIsOpen) {
-        this.mIsOpen = mIsOpen;
-    }
-
-    public List<FirebaseUser> getUsers() {
+    public List<User> getUsers() {
         return mUsers;
     }
 
-    public void setUsers(List<FirebaseUser> mUsers) {
+    public void setUsers(List<User> mUsers) {
         this.mUsers = mUsers;
     }
 
@@ -123,46 +93,5 @@ public final class Room {
 
     public void setTracks(List<Track> mTracks) {
         this.mTracks = mTracks;
-    }
-
-    public static Room roomFromMap(Map<String, Object> roomMap) {
-        Map<String, Object> authorMap = (Map<String, Object>) roomMap.get("author");
-        FirebaseUserMock author = FirebaseUserMock.userFromMap(authorMap);
-        List<FirebaseUser> users = new ArrayList<>();
-        List<Track> tracks = new ArrayList<>();
-        if (roomMap.containsKey("users")) {
-            List<HashMap<String, Object>> usersMap = (ArrayList<HashMap<String, Object>>) roomMap.get("users");
-            for (HashMap key : usersMap) {
-                users.add(FirebaseUserMock
-                        .userFromMap(key));
-            }
-        }
-        if (roomMap.containsKey("tracks")) {
-            ArrayList<HashMap<String, Object>> tracksMap = (ArrayList<HashMap<String, Object>>) roomMap.get("tracks");
-            for (HashMap key : tracksMap) {
-                tracks.add(Track
-                        .trackFromMap(key));
-            }
-        }
-        Room r = new Room();
-        if (roomMap.containsKey("id")) {
-            r.setId((String) roomMap.get("id"));
-        }
-        r.setAuthor(author);
-        if (roomMap.containsKey("title")) {
-            r.setTitle((String) roomMap.get("title"));
-        }
-        if (roomMap.containsKey("description")) {
-            r.setDescription((String) roomMap.get("description"));
-        }
-        if (roomMap.containsKey("imageUrl")) {
-            r.setImageUrl((String) roomMap.get("imageUrl"));
-        }
-        if (roomMap.containsKey("open")) {
-            r.setIsOpen((Boolean) roomMap.get("open"));
-        }
-        r.setUsers(users);
-        r.setTracks(tracks);
-        return r;
     }
 }

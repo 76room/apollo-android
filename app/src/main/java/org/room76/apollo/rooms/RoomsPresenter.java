@@ -2,8 +2,8 @@ package org.room76.apollo.rooms;
 
 import android.support.annotation.NonNull;
 
+import org.room76.apollo.model.Repository;
 import org.room76.apollo.model.Room;
-import org.room76.apollo.model.RoomsRepository;
 import org.room76.apollo.util.EspressoIdlingResource;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.List;
  */
 public class RoomsPresenter implements RoomsContract.UserActionsListener {
 
-    private final RoomsRepository mRoomsRepository;
+    private final Repository<Room> mRoomsRepository;
     private final RoomsContract.View mRoomsView;
 
     public RoomsPresenter(
-            @NonNull RoomsRepository roomsRepository, @NonNull RoomsContract.View roomsView) {
+            @NonNull Repository<Room> roomsRepository, @NonNull RoomsContract.View roomsView) {
         mRoomsRepository = roomsRepository;
         mRoomsView = roomsView;
     }
@@ -36,12 +36,13 @@ public class RoomsPresenter implements RoomsContract.UserActionsListener {
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
 
-        mRoomsRepository.getRooms(new RoomsRepository.LoadRoomsCallback() {
+        mRoomsRepository.getItems(new Repository.LoadCallback<Room>() {
             @Override
-            public void onRoomsLoaded(List<Room> rooms) {
-                EspressoIdlingResource.decrement(); // Set app as idle.
+            public void onLoaded(List<Room> items) {
+                // Set app as idle.
                 mRoomsView.setProgressIndicator(false);
-                mRoomsView.showRooms(rooms);
+                mRoomsView.showRooms(items);
+                EspressoIdlingResource.decrement();
             }
         });
     }

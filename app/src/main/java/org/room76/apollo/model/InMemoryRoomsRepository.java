@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Concrete implementation to load rooms from the data source.
  */
-public class InMemoryRoomsRepository implements RoomsRepository {
+public final class InMemoryRoomsRepository implements Repository<Room> {
 
     private final RoomsServiceApi mRoomsServiceApi;
 
@@ -25,34 +25,34 @@ public class InMemoryRoomsRepository implements RoomsRepository {
     }
 
     @Override
-    public void getRooms(@NonNull final LoadRoomsCallback callback) {
+    public void getItems(@NonNull final LoadCallback callback) {
         // Load from API only if needed.
         if (mCachedRooms == null) {
             mRoomsServiceApi.getAllRooms(new RoomsServiceApi.RoomsServiceCallback<List<Room>>() {
                 @Override
                 public void onLoaded(List<Room> rooms) {
                     mCachedRooms = new ArrayList<>(rooms);
-                    callback.onRoomsLoaded(mCachedRooms);
+                    callback.onLoaded(mCachedRooms);
                 }
             });
         } else {
-            callback.onRoomsLoaded(mCachedRooms);
+            callback.onLoaded(mCachedRooms);
         }
     }
 
     @Override
-    public void saveRoom(@NonNull Room room) {
+    public void saveItem(@NonNull Room room) {
         mRoomsServiceApi.saveRoom(room);
         refreshData();
     }
 
     @Override
-    public void getRoom(@NonNull final String roomId, @NonNull final GetRoomCallback callback) {
+    public void getItem(@NonNull final String roomId, @NonNull final GetCallback callback) {
         // Load rooms matching the id always directly from the API.
         mRoomsServiceApi.getRoom(roomId, new RoomsServiceApi.RoomsServiceCallback<Room>() {
             @Override
             public void onLoaded(Room room) {
-                callback.onRoomLoaded(room);
+                callback.onLoaded(room);
             }
         });
     }

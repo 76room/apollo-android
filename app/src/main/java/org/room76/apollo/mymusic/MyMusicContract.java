@@ -23,6 +23,8 @@ public interface MyMusicContract {
         void play();
         void previous();
         void next();
+
+        void showProgressIndicator(boolean active);
     }
 
     interface UserActionsListener {

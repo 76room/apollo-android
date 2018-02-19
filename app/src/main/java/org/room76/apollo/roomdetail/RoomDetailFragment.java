@@ -1,10 +1,13 @@
 package org.room76.apollo.roomdetail;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +16,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +37,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.R;
 import org.room76.apollo.model.Track;
+import org.room76.apollo.model.User;
 import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
@@ -60,6 +65,10 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     private ImageView mHeaderImage;
 
     private RecyclerView mUserRecyclerView;
+
+    private CollapsingToolbarLayout mCollapseLayout;
+
+    private AppBarLayout mAppBarLayout;
 
     private RecyclerView mTracksRecyclerView;
 
@@ -105,9 +114,10 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
             mHeaderImage = getActivity().findViewById(R.id.header_image);
             mDetailTitle = getActivity().findViewById(R.id.toolbar);
             mProgressBar = getActivity().findViewById(R.id.animation_view);
+            mCollapseLayout = getActivity().findViewById(R.id.collapsing_toolbar);
             mIsOpen = getActivity().findViewById(R.id.room_is_open);
-            AppBarLayout appBarLayout = getActivity().findViewById(R.id.app_bar_layout);
-            appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            mAppBarLayout = getActivity().findViewById(R.id.app_bar_layout);
+            mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 @Override
                 public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                     if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
@@ -162,8 +172,10 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     }
 
     @Override
-    public void showAuthor(FirebaseUser author) {
+    public void showAuthor(User author) {
+        Log.v("temp", "show author");
 //        mAuthorImage.setVisibility(View.VISIBLE);
+
 //
 //        if (author.getPhotoUrl() != null) {
 //            // This app uses Glide for image loading
@@ -194,7 +206,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         mIsOpen.setVisibility(View.GONE);
     }
 
-    public void populateUserView(List<FirebaseUser> users) {
+    public void populateUserView(List<User> users) {
         mUserAdapter = new UsersAdapter(users);
         mUserRecyclerView.setAdapter(mUserAdapter);
     }
@@ -283,7 +295,40 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     public void hideImage() {
         mHeaderImage.setImageDrawable(null);
         mHeaderImage.setVisibility(View.GONE);
+        mIsOpen.setVisibility(View.GONE);
+        disableCollapse();
+
     }
+
+    private void disableCollapse() {
+        mCollapseLayout.setTitleEnabled(false);
+        mAppBarLayout.setExpanded(false);
+        mAppBarLayout.findViewById(R.id.header_dim).setVisibility(View.GONE);
+        mAppBarLayout.setActivated(false);
+        //you will need to hide also all content inside CollapsingToolbarLayout
+        //plus you will need to hide title of it
+        mCollapseLayout.setTitleEnabled(false);
+
+        AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) mCollapseLayout.getLayoutParams();
+        p.setScrollFlags(0);
+        mCollapseLayout.setLayoutParams(p);
+        mCollapseLayout.setActivated(false);
+
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
+        lp.height = getResources().getDimensionPixelSize(R.dimen.toolbar_height)
+                + (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? getStatusBarHeight() : 0);
+        mAppBarLayout.requestLayout();
+    }
+
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
 
     @Override
     public void showMissingRoom() {
@@ -307,9 +352,9 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     private static class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
 
-        private List<FirebaseUser> mUsers;
+        private List<User> mUsers;
 
-        public UsersAdapter(List<FirebaseUser> users) {
+        public UsersAdapter(List<User> users) {
             setList(users);
         }
 
@@ -324,9 +369,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
         @Override
         public void onBindViewHolder(UserViewHolder viewHolder, int position) {
-            FirebaseUser user = mUsers.get(position);
-            viewHolder.mTextView.setText(user.getDisplayName() == null || user.getDisplayName().isEmpty()
-                    ? user.getEmail() : user.getDisplayName());
+            User user = mUsers.get(position);
+            viewHolder.mTextView.setText(user.getName());
 
             EspressoIdlingResource.increment();
 
@@ -345,7 +389,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
         }
 
-        private void setList(List<FirebaseUser> users) {
+        private void setList(List<User> users) {
             mUsers = users;
         }
 
