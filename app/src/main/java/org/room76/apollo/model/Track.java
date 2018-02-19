@@ -8,7 +8,6 @@ import com.google.firebase.auth.FirebaseUser;
 import org.room76.apollo.signin.SignInState;
 
 import java.util.Map;
-
 import java.util.Random;
 
 /**
