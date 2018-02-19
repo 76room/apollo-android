@@ -8,11 +8,11 @@ public final class RoomRepositories {
         // no instance
     }
 
-    private static Repository repository = null;
+    private static Repository<Room> repository = null;
 
     public synchronized static Repository<Room> getInMemoryRepoInstance(@NonNull RoomsServiceApi roomsServiceApi) {
         if (null == repository) {
-            repository = new InMemoryRoomsRepository(roomsServiceApi);
+            repository = new FirebaseDataRoomRepository();
         }
         return repository;
     }

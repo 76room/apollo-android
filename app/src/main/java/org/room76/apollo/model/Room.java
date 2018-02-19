@@ -15,23 +15,24 @@ import java.util.UUID;
  */
 public final class Room {
 
-    private final String mId;
+    private String mId;
 
     @Nullable
-    private final User mAuthor;
+    private User mAuthor;
     @Nullable
-    private final String mTitle;
+    private String mTitle;
     @Nullable
-    private final String mDescription;
+    private String mDescription;
     @Nullable
-    private final String mImageUrl;
+    private String mImageUrl;
 
-    private final boolean mIsOpen;
+    private boolean mIsOpen;
 
     private List<User> mUsers = new ArrayList<>();
 
     private List<Track> mTracks = new ArrayList<>();
 
+    public Room(){}
 
     public Room(@Nullable User author, @Nullable String title, @Nullable String description, boolean isOpen) {
         this(author, title, description, isOpen, null);
