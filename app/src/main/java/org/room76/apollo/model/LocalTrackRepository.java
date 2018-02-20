@@ -4,6 +4,7 @@ import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -102,9 +103,10 @@ public final class LocalTrackRepository implements Repository<Track> {
                     fileList.add(file);
                 }
             }
-            return fileList;
         } catch (Exception e) {
-            return null;
+            Log.e("getAudioFiles" ,e.getMessage());
+        } finally {
+            return fileList;
         }
     }
 }

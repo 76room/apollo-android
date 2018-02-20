@@ -24,7 +24,7 @@ public final class Track implements Comparable<Track>{
     private int mLikes;
     private int mDislikes;
 
-    private ArrayMap<FirebaseUser, Byte> mVoted;
+    private ArrayMap<FirebaseUser, Byte> mVoted = new ArrayMap<>();
 
     public Track() {
     }

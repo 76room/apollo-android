@@ -3,6 +3,7 @@ package org.room76.apollo.model;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.PropertyName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,22 +15,25 @@ import java.util.UUID;
  * Immutable model class for a Room.
  */
 public final class Room {
-
+    @PropertyName("id")
     private String mId;
-
     @Nullable
+    @PropertyName("author")
     private User mAuthor;
     @Nullable
+    @PropertyName("title")
     private String mTitle;
     @Nullable
+    @PropertyName("description")
     private String mDescription;
     @Nullable
+    @PropertyName("imageUrl")
     private String mImageUrl;
-
+    @PropertyName("open")
     private boolean mIsOpen;
-
+    @PropertyName("users")
     private List<User> mUsers = new ArrayList<>();
-
+    @PropertyName("tracks")
     private List<Track> mTracks = new ArrayList<>();
 
     public Room(){}

@@ -18,59 +18,52 @@ import java.util.Map;
 
 public class FirebaseDataRoomRepository implements Repository<Room> {
     private static final String TAG = FirebaseDataRoomRepository.class.getClass().getSimpleName();
+    private static final String TABLE_NAME = "Rooms";
 
     private List<Room> mList = new ArrayList<>();
     private DatabaseReference REFERENCE = FirebaseDatabase.getInstance().getReference();
 
-    @Override
-    public void getItems(@NonNull final LoadCallback<Room> callback) {
-        Query q = REFERENCE.child("Rooms");
-        q.addChildEventListener(new ChildEventListener() {
+    public FirebaseDataRoomRepository() {
+        refresh();
+    }
+
+    private void refresh(){
+        Query q = REFERENCE.child(TABLE_NAME);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                mList.add(dataSnapshot.getValue(Room.class));
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mList.clear();
+                for (DataSnapshot roomSnapshot: dataSnapshot.getChildren()) {
+                    Room room = roomSnapshot.getValue(Room.class);
+                    mList.add(room);
+                }
             }
-
-            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                mList.remove(dataSnapshot.getValue(Room.class));
-            }
-
-            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG,databaseError.getMessage());
             }
         });
+    }
+
+    @Override
+    public void getItems(@NonNull final LoadCallback<Room> callback) {
         callback.onLoaded(mList);
     }
 
     @Override
     public void getItem(@NonNull final String roomId, @NonNull final GetCallback<Room> callback) {
-        Query q = REFERENCE.child("Rooms").child(roomId);
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                callback.onLoaded(dataSnapshot.getValue(Room.class));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG,databaseError.getMessage());
-            }
-        });
+        for (Room room: mList) {
+            if (room.getId().equals(roomId)) callback.onLoaded(room);
+        }
     }
 
     @Override
     public void saveItem(@NonNull Room item) {
-        REFERENCE.child("Rooms").child(item.getId()).setValue(item);
+        REFERENCE.child(TABLE_NAME).child(item.getId()).setValue(item);
     }
 
     @Override
     public void refreshData() {
-        //pass
+        refresh();
     }
 }
