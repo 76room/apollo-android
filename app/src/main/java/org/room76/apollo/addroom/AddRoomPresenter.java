@@ -32,12 +32,7 @@ public class AddRoomPresenter implements AddRoomContract.UserActionsListener {
     }
 
     @Override
-    public void saveRoom(String title, String description) {
-        String imageUrl = null;
-        if (mImageFile != null && mImageFile.exists()) {
-            imageUrl = mImageFile.getPath();
-        }
-
+    public void saveRoom(String title, String description, String imageUrl) {
         User author = new User(SignInState.getInstance().getUser());
         boolean isOpen = true;
 
@@ -52,11 +47,7 @@ public class AddRoomPresenter implements AddRoomContract.UserActionsListener {
 
     @Override
     public void takePicture() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "Apollo/JPEG_" + timeStamp + "_";
-//        mImageFile.create(imageFileName, ".jpg");
-        mImageFile = new File(imageFileName);
-        mAddRoomView.openCamera(mImageFile.getPath());
+        mAddRoomView.openCamera();
     }
 
     @Override

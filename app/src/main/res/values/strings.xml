@@ -58,5 +58,8 @@
     <string name="add_location_publicity_secondary">Show room location on details view</string>
     <string name="add_location_limit_primary">Location limit</string>
     <string name="add_location_limit_secondary">Use limit for new user connection locality</string>
+    <string name="select_from_gallery">Select from gallery</string>
+    <string name="take_photo">Take photo</string>
+    <string name="select_dialog_title">Select from:</string>
 
 </resources>

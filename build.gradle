@@ -39,11 +39,11 @@ ext {
     targetSdkVersion = 26
     compileSdkVersion = 26
     buildToolsVersion = '26.0.2'
-
-    // App dependencies
     supportLibraryVersion = '26.0.2'
     constrainLayoutVersion = '1.0.2'
-    firebaseVersion = '11.6.0'
+
+    firebaseVersion = '11.8.0'
+
     glideVersion = '3.6.1'
     lottieVersion = '2.5.0-rc1'
     junitVersion = '4.12'

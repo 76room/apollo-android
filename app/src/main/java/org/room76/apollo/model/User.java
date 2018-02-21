@@ -1,17 +1,8 @@
 package org.room76.apollo.model;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.google.android.gms.internal.zzdwf;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.FirebaseUserMetadata;
-import com.google.firebase.auth.UserInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Alexey on 2/3/18.
