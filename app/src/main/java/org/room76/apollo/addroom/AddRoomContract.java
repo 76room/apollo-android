@@ -15,7 +15,7 @@ public interface AddRoomContract {
 
         void showRoomsList();
 
-        void openCamera(String saveTo);
+        void openCamera();
 
         void showImagePreview(@NonNull String uri);
 
@@ -24,7 +24,7 @@ public interface AddRoomContract {
 
     interface UserActionsListener {
 
-        void saveRoom(String title, String description);
+        void saveRoom(String title, String description, String imageUrl);
 
         void takePicture() throws IOException;
 

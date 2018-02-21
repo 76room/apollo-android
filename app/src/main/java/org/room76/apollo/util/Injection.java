@@ -1,5 +1,6 @@
 package org.room76.apollo.util;
 
+import org.room76.apollo.model.FirebaseDataRoomRepository;
 import org.room76.apollo.model.LocalTrackRepository;
 import org.room76.apollo.model.Repository;
 import org.room76.apollo.model.Room;
@@ -13,18 +14,20 @@ import org.room76.apollo.model.Track;
  */
 public final class Injection {
 
-    private static LocalTrackRepository repository = new LocalTrackRepository();
+    private static Repository<Track> mTrackRepository = new LocalTrackRepository();
+    private static Repository<Room> mRoomRepository = new FirebaseDataRoomRepository();
 
     static {
-        repository.refreshData();
+        mTrackRepository.refreshData();
+        mRoomRepository.refreshData();
     }
 
     public static Repository<Room> provideRoomsRepository() {
-        return RoomRepositories.getInMemoryRepoInstance(new RoomsServiceApiImpl());
+        return RoomRepositories.getFirebaseRepoInstance();
     }
 
     public static Repository<Track> provideTrackRepository() {
-        return repository;
+        return mTrackRepository;
     }
 }
 

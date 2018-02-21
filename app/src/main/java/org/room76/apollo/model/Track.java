@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.signin.SignInState;
 
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -23,7 +24,7 @@ public final class Track implements Comparable<Track>{
     private int mLikes;
     private int mDislikes;
 
-    private ArrayMap<FirebaseUser, Byte> mVoted;
+    private ArrayMap<FirebaseUser, Byte> mVoted = new ArrayMap<>();
 
     public Track() {
     }
@@ -105,5 +106,62 @@ public final class Track implements Comparable<Track>{
         } else {
             return -1;
         }
+    }
+
+    public void setArtist(String mArtist) {
+        this.mArtist = mArtist;
+    }
+
+    public void setTitle(String mTitle) {
+        this.mTitle = mTitle;
+    }
+
+    public void setPath(String mPath) {
+        this.mPath = mPath;
+    }
+
+    public void setDuration(int mDuration) {
+        this.mDuration = mDuration;
+    }
+
+    public void setLikes(int mLikes) {
+        this.mLikes = mLikes;
+    }
+
+    public void setDislikes(int mDislikes) {
+        this.mDislikes = mDislikes;
+    }
+
+    public void setVoted(ArrayMap<FirebaseUser, Byte> mVoted) {
+        this.mVoted = mVoted;
+    }
+
+    public static Track trackFromMap(Map<String, Object> trackMap) {
+        Track t = new Track();
+        if (trackMap.containsKey("artist")) {
+            t.setArtist((String) trackMap.get("artist"));
+        }
+        if (trackMap.containsKey("title")) {
+            t.setTitle((String) trackMap.get("title"));
+        }
+        if (trackMap.containsKey("path")) {
+            t.setPath((String) trackMap.get("path"));
+        }
+        if (trackMap.containsKey("duration")) {
+            Long l = (long) trackMap.get("duration");
+            t.setDuration(l.intValue());
+        }
+        if (trackMap.containsKey("photoUri")) {
+            t.setPhotoUri((String) trackMap.get("photoUri"));
+        }
+        if (trackMap.containsKey("likes")) {
+            Long l = (long) trackMap.get("likes");
+            t.setLikes(l.intValue());
+        }
+        if (trackMap.containsKey("photoUri")) {
+            Long l = (long) trackMap.get("dislikes");
+            t.setDislikes(l.intValue());
+        }
+        return t;
     }
 }

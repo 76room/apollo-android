@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +27,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.room76.apollo.R;
 import org.room76.apollo.util.EspressoIdlingResource;
@@ -33,20 +38,25 @@ import org.room76.apollo.util.Injection;
 
 import java.io.IOException;
 
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * Main UI for the add room screen. Users can enter a room title and description. Images can be
  * added to rooms by clicking on the options menu.
  */
-public class AddRoomFragment extends Fragment implements AddRoomContract.View {
+public class AddRoomFragment extends Fragment implements AddRoomContract.View, View.OnClickListener {
 
     public static final int REQUEST_CODE_IMAGE_CAPTURE = 0x1001;
+    public static final int REQUEST_CODE_IMAGE_SELECT = 0x1002;
 
     private AddRoomContract.UserActionsListener mActionListener;
 
     private EditText mTitle, mDescription;
 
     private ImageView mImageThumbnail, mOpenCamera;
+
+    private Uri mImageUri;
 
     public static AddRoomFragment newInstance() {
         return new AddRoomFragment();
@@ -65,8 +75,15 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionListener.saveRoom(mTitle.getText().toString(),
-                        mDescription.getText().toString());
+                StorageReference ref = FirebaseStorage.getInstance().getReference().child("room-images").child(mImageUri.getLastPathSegment());
+                ref.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        mActionListener.saveRoom(mTitle.getText().toString(),
+                                mDescription.getText().toString(), downloadUrl.toString());
+                    }
+                });
             }
         });
     }
@@ -103,22 +120,25 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View {
 
     @Override
     public void showRoomsList() {
-        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().setResult(RESULT_OK);
         getActivity().finish();
     }
 
     @Override
-    public void openCamera(String saveTo) {
-        // Open the camera to take a picture.
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Check if there is a camera app installed to handle our Intent
-        if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(saveTo));
-            startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE);
-        } else {
-            Snackbar.make(mTitle, getString(R.string.cannot_connect_to_camera_message),
-                    Snackbar.LENGTH_SHORT).show();
-        }
+    public void openCamera() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_select_image_input, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView camera = dialogView.findViewById(R.id.take_photo);
+        TextView gallery = dialogView.findViewById(R.id.from_gallery);
+
+        camera.setOnClickListener(this);
+        gallery.setOnClickListener(this);
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -152,11 +172,31 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // If an image is received, display it on the ImageView.
-        if (REQUEST_CODE_IMAGE_CAPTURE == requestCode && Activity.RESULT_OK == resultCode) {
-            mActionListener.imageAvailable();
-        } else {
-            mActionListener.imageCaptureFailed();
+            if (requestCode == REQUEST_CODE_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                mImageUri = data.getData();
+                showImagePreview(mImageUri.toString());
+            }
+            else if (requestCode == REQUEST_CODE_IMAGE_SELECT && resultCode == RESULT_OK && null != data) {
+                mImageUri = data.getData();
+                showImagePreview(mImageUri.toString());
+            } else {
+                mActionListener.imageCaptureFailed();
+            }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.from_gallery) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent,
+                    "Select Picture"), REQUEST_CODE_IMAGE_SELECT);
+        } else if (view.getId() == R.id.take_photo) {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, REQUEST_CODE_IMAGE_CAPTURE);
         }
     }
+
+
 }
