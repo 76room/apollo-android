@@ -81,7 +81,7 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View, V
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         mActionListener.saveRoom(mTitle.getText().toString(),
-                                mDescription.getText().toString(),downloadUrl.toString());
+                                mDescription.getText().toString(), downloadUrl.toString());
                     }
                 });
             }

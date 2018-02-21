@@ -60,6 +60,7 @@ public class FirebaseDataRoomRepository implements Repository<Room> {
     @Override
     public void saveItem(@NonNull Room item) {
         DATABASE.child(TABLE_NAME).child(item.getId()).setValue(item);
+        mList.add(item);
     }
 
     @Override

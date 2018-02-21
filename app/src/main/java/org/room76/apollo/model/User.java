@@ -1,7 +1,5 @@
 package org.room76.apollo.model;
 
-import android.net.Uri;
-
 import com.google.firebase.auth.FirebaseUser;
 
 /**
@@ -11,7 +9,7 @@ import com.google.firebase.auth.FirebaseUser;
 public final class User {
 
     private String mName;
-    private Uri mPhotoUrl;
+    private String mPhotoUrl;
     private String mFirebaseUserId;
 
     public User(){}
@@ -26,14 +24,14 @@ public final class User {
         if (user != null) {
             this.mName = user.getDisplayName() == null || user.getDisplayName().isEmpty()
                     ? user.getEmail() : user.getDisplayName();
-            this.mPhotoUrl = user.getPhotoUrl();
+            this.mPhotoUrl = user.getPhotoUrl().toString();
             mFirebaseUserId = user.getUid();
         }
     }
 
     public User(String name, String photoUrl) {
         this.mName = name;
-        this.mPhotoUrl = Uri.parse(photoUrl);
+        this.mPhotoUrl = photoUrl;
     }
 
     public String getName() {
@@ -44,11 +42,11 @@ public final class User {
         this.mName = mName;
     }
 
-    public Uri getPhotoUrl() {
+    public String getPhotoUrl() {
         return mPhotoUrl;
     }
 
-    public void setPhotoUrl(Uri mPhotoUrl) {
+    public void setPhotoUrl(String mPhotoUrl) {
         this.mPhotoUrl = mPhotoUrl;
     }
 
