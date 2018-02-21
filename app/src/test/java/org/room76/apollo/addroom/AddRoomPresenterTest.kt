@@ -40,7 +40,7 @@ class AddRoomPresenterTest {
     @Test
     fun saveRoomToRepository_showsSuccessMessageUi() {
         // When the presenter is asked to save a room
-        mAddRoomsPresenter!!.saveRoom("New Room Title", "Some Room Description")
+        mAddRoomsPresenter!!.saveRoom("New Room Title", "Some Room Description",null)
 
         // Then a room is,
         verify<Repository<Room>>(mRoomsRepository).saveItem(any(Room::class.java)) // saved to the model
@@ -50,7 +50,7 @@ class AddRoomPresenterTest {
     @Test
     fun saveRoom_emptyRoomShowsErrorUi() {
         // When the presenter is asked to save an empty room
-        mAddRoomsPresenter!!.saveRoom("", "")
+        mAddRoomsPresenter!!.saveRoom("", "",null)
 
         // Then an empty not error is shown in the UI
         verify<AddRoomContract.View>(mAddRoomView).showEmptyRoomError()
