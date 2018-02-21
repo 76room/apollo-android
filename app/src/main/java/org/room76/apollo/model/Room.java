@@ -49,6 +49,12 @@ public final class Room {
         mDescription = description;
         mImageUrl = imageUrl;
         mIsOpen = isOpen;
+        mUsers.add(author);
+        List<Track> tracks = new ArrayList<>();
+        tracks.add(new Track("Demons", "Imagine", 200000, "http://test"));
+        tracks.add(new Track("Rape me", "Nirvana", 400000, "http://test"));
+        tracks.add(new Track("Выхода нет", "Сплин", 50000, "http://test"));
+        mTracks = tracks;
     }
 
     public String getId() {
