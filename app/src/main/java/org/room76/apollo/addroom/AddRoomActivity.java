@@ -1,5 +1,6 @@
 package org.room76.apollo.addroom;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
@@ -18,6 +19,8 @@ import org.room76.apollo.util.EspressoIdlingResource;
  */
 public class AddRoomActivity extends AppCompatActivity {
 
+    private AddRoomFragment mFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +35,8 @@ public class AddRoomActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
 
         if (null == savedInstanceState) {
-            initFragment(AddRoomFragment.newInstance());
+            mFragment = AddRoomFragment.newInstance();
+            initFragment(mFragment);
         }
     }
 
@@ -53,5 +57,18 @@ public class AddRoomActivity extends AppCompatActivity {
     @VisibleForTesting
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
+    }
+
+    @Override
+    public void onBackPressed() {
+        mFragment.onBackPressed(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                AddRoomActivity.super.onBackPressed();
+
+            }
+
+        });
+
     }
 }
