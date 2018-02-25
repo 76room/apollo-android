@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -26,6 +27,7 @@ import org.room76.apollo.R;
 import org.room76.apollo.addroom.AddRoomActivity;
 import org.room76.apollo.model.Room;
 import org.room76.apollo.roomdetail.RoomDetailActivity;
+import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.Injection;
 
@@ -156,8 +158,13 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
     @Override
     public void showAddRoom() {
-        Intent intent = new Intent(getContext(), AddRoomActivity.class);
-        startActivityForResult(intent, REQUEST_ADD_ROOM);
+        if (SignInState.getInstance().getUser() == null) {
+            Toast.makeText(getContext(),"Please sigh in to add rooms",Toast.LENGTH_LONG).show();
+        } else {
+            Intent intent = new Intent(getContext(), AddRoomActivity.class);
+            startActivityForResult(intent, REQUEST_ADD_ROOM);
+        }
+
     }
 
     @Override
