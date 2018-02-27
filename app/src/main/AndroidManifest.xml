@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SplashActivity"
+            android:theme="@style/Base.AppTheme.Fullscreen"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +25,7 @@
         </activity>
         <activity
             android:name=".rooms.RoomsActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
         </activity>
         <activity android:name=".roomdetail.RoomDetailActivity" />
         <activity android:name=".addroom.AddRoomActivity" />
@@ -33,7 +34,7 @@
             android:launchMode="singleTask"/>
         <activity
             android:name=".mymusic.MyMusicActivity"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTask"/>
     </application>
 
 </manifest>

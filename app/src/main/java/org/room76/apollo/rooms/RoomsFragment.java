@@ -47,6 +47,8 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
     private ActivityOptions mOptions;
 
+    private boolean mSearchPresent;
+
     public RoomsFragment() {
         // Requires empty public constructor
     }
@@ -213,6 +215,12 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
             Room room = mRooms.get(position);
 
+            if (mSearchPresent
+                    && room.getAuthor()!=null
+                    && room.getAuthor().getFirebaseUserId().equals(SignInState.getInstance().getUser().getUid())) {
+                viewHolder.itemView.setVisibility(View.GONE);
+            }
+
             viewHolder.title.setText(room.getTitle());
 
             if (room.getAuthor() != null && room.getAuthor().getPhotoUrl() != null) {
@@ -323,6 +331,11 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
     public interface RoomItemListener {
 
         void onRoomClick(Room clickedRoom);
+    }
+
+    public void update(boolean value){
+        mSearchPresent = value;
+        mListAdapter.notifyDataSetChanged();
     }
 
 }

@@ -117,7 +117,9 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
                         startActivity(new Intent(getApplicationContext(), RoomsActivity.class));
                         break;
                     case R.id.find_rooms_navigation_menu_item:
-                        Toast.makeText(getApplicationContext(), "Find rooms", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(getApplicationContext(), RoomsActivity.class);
+                        i.setAction(SEARCH_SERVICE);
+                        startActivity(i);
                         break;
                     case R.id.find_music_navigation_menu_item:
                         startActivity(new Intent(getApplicationContext(), MyMusicActivity.class));
@@ -145,16 +147,18 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
                 }
                 break;
             case R.id.footer_feedback:
-                Toast.makeText(getApplicationContext(), "footer click", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "feedback click", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.footer_settings:
-                Toast.makeText(getApplicationContext(), "footer click", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "settings click", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.footer_sigh_out:
                 if (SignInState.getInstance().getUser() != null) {
                     Intent intent = new Intent(this, SignInActivity.class);
                     intent.setAction(String.valueOf(SignInActivity.SIGN_OUT));
                     startActivityForResult(intent, SignInActivity.SIGN_OUT);
+                } else {
+                    Toast.makeText(getApplicationContext(), "user not log in", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:

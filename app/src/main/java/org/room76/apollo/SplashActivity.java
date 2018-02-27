@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.TextView;
 
 import org.room76.apollo.rooms.RoomsActivity;
@@ -26,10 +25,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         TextView tv = findViewById(R.id.version);
-
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
 
         tv.setText(String.format("%s %s", getString(R.string.version_name), BuildConfig.VERSION_NAME));
 
@@ -56,6 +51,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SignInActivity.SIGN_IN) {
             startActivity(new Intent(getApplicationContext(), RoomsActivity.class));
+            finish();
         }
     }
 }
