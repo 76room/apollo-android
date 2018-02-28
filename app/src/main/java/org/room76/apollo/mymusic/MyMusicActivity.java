@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import org.room76.apollo.BaseNavigationActivity;
-import org.room76.apollo.R;
 
 public class MyMusicActivity extends BaseNavigationActivity {
 

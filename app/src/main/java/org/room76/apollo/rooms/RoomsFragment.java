@@ -139,7 +139,7 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
     /**
      * Listener for clicks on rooms in the RecyclerView.
      */
-    RoomItemListener mItemListener = new RoomItemListener() {
+    private RoomItemListener mItemListener = new RoomItemListener() {
         @Override
         public void onRoomClick(Room clickedRoom) {
             mActionsListener.openRoomDetails(clickedRoom);

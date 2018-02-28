@@ -104,6 +104,7 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
                 // Open the navigation drawer when the home icon is selected from the toolbar.
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
+            default:
         }
         return super.onOptionsItemSelected(item);
     }
