@@ -10,8 +10,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +44,11 @@ public class FirebaseDataRoomRepository implements Repository<Room> {
     }
 
     @Override
+    public void updateItem(Room item) {
+        DATABASE.child(TABLE_NAME).child(item.getId()).setValue(item);
+    }
+
+    @Override
     public void getItems(@NonNull final LoadCallback<Room> callback) {
         callback.onLoaded(mList);
     }
@@ -58,7 +61,7 @@ public class FirebaseDataRoomRepository implements Repository<Room> {
     }
 
     @Override
-    public void saveItem(@NonNull Room item) {
+    public synchronized void saveItem(@NonNull Room item) {
         DATABASE.child(TABLE_NAME).child(item.getId()).setValue(item);
         mList.add(item);
     }
@@ -66,5 +69,10 @@ public class FirebaseDataRoomRepository implements Repository<Room> {
     @Override
     public void refreshData() {
         refresh();
+    }
+
+    @Override
+    public boolean contains(Room item) {
+        return mList.contains(item);
     }
 }

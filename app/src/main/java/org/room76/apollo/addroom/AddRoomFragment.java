@@ -1,23 +1,21 @@
 package org.room76.apollo.addroom;
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,6 +56,8 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View, V
 
     private Uri mImageUri;
 
+    private AlertDialog mSelector;
+
     public static AddRoomFragment newInstance() {
         return new AddRoomFragment();
     }
@@ -75,15 +75,26 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View, V
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StorageReference ref = FirebaseStorage.getInstance().getReference().child("room-images").child(mImageUri.getLastPathSegment());
-                ref.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        mActionListener.saveRoom(mTitle.getText().toString(),
-                                mDescription.getText().toString(), downloadUrl.toString());
-                    }
-                });
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                v.setEnabled(false);
+                if (mImageUri != null) {
+                    StorageReference ref = FirebaseStorage.getInstance().getReference().child("room-images").child(mImageUri.getLastPathSegment());
+                    ref.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            mActionListener.saveRoom(mTitle.getText().toString(),
+                                    mDescription.getText().toString(), downloadUrl.toString());
+                        }
+                    });
+                } else {
+                    mActionListener.saveRoom(mTitle.getText().toString(),
+                            mDescription.getText().toString(), null);
+                }
             }
         });
     }
@@ -137,8 +148,8 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View, V
         camera.setOnClickListener(this);
         gallery.setOnClickListener(this);
 
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
+        mSelector = dialogBuilder.create();
+        mSelector.show();
     }
 
     @Override
@@ -172,16 +183,15 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View, V
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            if (requestCode == REQUEST_CODE_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-                mImageUri = data.getData();
-                showImagePreview(mImageUri.toString());
-            }
-            else if (requestCode == REQUEST_CODE_IMAGE_SELECT && resultCode == RESULT_OK && null != data) {
-                mImageUri = data.getData();
-                showImagePreview(mImageUri.toString());
-            } else {
-                mActionListener.imageCaptureFailed();
-            }
+        if (requestCode == REQUEST_CODE_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            mImageUri = data.getData();
+            showImagePreview(mImageUri.toString());
+        } else if (requestCode == REQUEST_CODE_IMAGE_SELECT && resultCode == RESULT_OK && null != data) {
+            mImageUri = data.getData();
+            showImagePreview(mImageUri.toString());
+        } else {
+            mActionListener.imageCaptureFailed();
+        }
     }
 
     @Override
@@ -196,7 +206,26 @@ public class AddRoomFragment extends Fragment implements AddRoomContract.View, V
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, REQUEST_CODE_IMAGE_CAPTURE);
         }
+        mSelector.dismiss();
     }
 
+
+    public void onBackPressed(DialogInterface.OnClickListener listener) {
+        if (mTitle.getText().length() > 0 || mDescription.getText().length() > 0 || mImageThumbnail.getDrawable() != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.AlertDialog));
+            builder.setTitle("Changes");
+            builder.setMessage("You have unsaved changes");
+            builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton("Dismiss", listener);
+            builder.setCancelable(true);
+            builder.create().show();
+        } else {
+            listener.onClick(null, 0);
+        }
+    }
 
 }

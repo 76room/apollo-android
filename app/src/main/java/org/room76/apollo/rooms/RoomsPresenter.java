@@ -2,8 +2,12 @@ package org.room76.apollo.rooms;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import org.room76.apollo.model.Repository;
 import org.room76.apollo.model.Room;
+import org.room76.apollo.model.User;
+import org.room76.apollo.signin.SignInState;
 import org.room76.apollo.util.EspressoIdlingResource;
 
 import java.util.List;
@@ -55,6 +59,22 @@ public class RoomsPresenter implements RoomsContract.UserActionsListener {
     @Override
     public void openRoomDetails(@NonNull Room requestedRoom) {
         mRoomsView.showRoomDetailUi(requestedRoom.getId());
+    }
+
+    @Override
+    public synchronized void addToRoom(Room room) {
+        FirebaseUser user = SignInState.getInstance().getUser();
+        if (!room.containsUser(user.getUid())) {
+            room.addUser(new User(user));
+        } else {
+            room.removeUser(user.getUid());
+        }
+        mRoomsRepository.updateItem(room);
+    }
+
+    @Override
+    public boolean contains(Room room) {
+        return room.containsUser(SignInState.getInstance().getUser().getUid());
     }
 
 }

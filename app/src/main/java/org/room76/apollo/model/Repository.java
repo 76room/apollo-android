@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface Repository<T> {
 
+    void updateItem(T item);
+
     interface LoadCallback<T> {
         void onLoaded(List<T> items);
     }
@@ -24,5 +26,7 @@ public interface Repository<T> {
     void saveItem(@NonNull T item);
 
     void refreshData();
+
+    boolean contains(T item);
 
 }

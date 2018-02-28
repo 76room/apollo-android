@@ -24,7 +24,7 @@ public final class User {
         if (user != null) {
             this.mName = user.getDisplayName() == null || user.getDisplayName().isEmpty()
                     ? user.getEmail() : user.getDisplayName();
-            this.mPhotoUrl = user.getPhotoUrl().toString();
+            if (user.getPhotoUrl()!=null) this.mPhotoUrl = user.getPhotoUrl().toString();
             mFirebaseUserId = user.getUid();
         }
     }

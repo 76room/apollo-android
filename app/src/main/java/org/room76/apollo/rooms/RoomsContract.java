@@ -30,5 +30,9 @@ public interface RoomsContract {
         void addNewRoom();
 
         void openRoomDetails(@NonNull Room requestedRoom);
+
+        void addToRoom(Room room);
+
+        boolean contains(Room room);
     }
 }

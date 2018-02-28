@@ -90,6 +90,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:visibility="gone"
+        android:background="@drawable/dr_circle_background"
         app:layout_anchor="@+id/scroll"
         app:layout_anchorGravity="top|center"
         app:layout_constraintBottom_toTopOf="@+id/login_form"

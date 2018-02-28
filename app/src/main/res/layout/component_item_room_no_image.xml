@@ -48,21 +48,24 @@
         </LinearLayout>
 
         <ImageButton
+            android:id="@+id/add"
             style="@style/IconStyle"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_map_marker"
+            android:background="@drawable/ic_add_to_list"
+            android:layout_gravity="center"
             android:contentDescription="@string/location_icon_description" />
 
         <ImageButton
+            android:id="@+id/location"
             style="@style/IconStyle"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_heart"
+            android:background="@drawable/ic_map_marker"
+            android:layout_gravity="center"
             android:contentDescription="@string/heart_icon_description" />
 
         <ImageButton
+            android:id="@+id/share"
             style="@style/IconStyle"
-            android:layout_gravity="center_vertical"
             android:background="@drawable/ic_share_variant"
+            android:layout_gravity="center"
             android:contentDescription="@string/share_icon_description" />
     </LinearLayout>
 

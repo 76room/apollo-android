@@ -8,11 +8,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import org.room76.apollo.BaseNavigationActivity;
-import org.room76.apollo.R;
 
 public class MyMusicActivity extends BaseNavigationActivity {
 
-    private static final int PERMISSION_REQUEST_READ_MUSIC = 0;
+    public static final int PERMISSION_REQUEST_READ_MUSIC = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

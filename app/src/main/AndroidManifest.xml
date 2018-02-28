@@ -15,13 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".rooms.RoomsActivity"
-            android:launchMode="singleTop">
+        <activity android:name=".SplashActivity"
+            android:theme="@style/Base.AppTheme.Fullscreen"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".rooms.RoomsActivity">
         </activity>
         <activity android:name=".roomdetail.RoomDetailActivity" />
         <activity android:name=".addroom.AddRoomActivity" />
@@ -30,7 +33,7 @@
             android:launchMode="singleTask"/>
         <activity
             android:name=".mymusic.MyMusicActivity"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTask"/>
     </application>
 
 </manifest>

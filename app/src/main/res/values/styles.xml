@@ -19,6 +19,11 @@
         <item name="android:windowActivityTransitions">true</item>
     </style>
 
+    <style name="Base.AppTheme.Fullscreen" parent="Base.AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
@@ -53,8 +58,29 @@
     <style name="IconStyle">
         <item name="android:layout_width">24dp</item>
         <item name="android:layout_height">24dp</item>
-        <item name="android:layout_marginLeft">6dp</item>
-        <item name="android:layout_marginRight">6dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="AlertDialog">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+
+    <style name="AlertDialogText">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:layout_height"   >wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">start|center</item>
     </style>
 
 </resources>

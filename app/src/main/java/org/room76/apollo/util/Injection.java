@@ -17,7 +17,7 @@ public final class Injection {
     private static Repository<Track> mTrackRepository = new LocalTrackRepository();
     private static Repository<Room> mRoomRepository = new FirebaseDataRoomRepository();
 
-    static {
+    public static void init() {
         mTrackRepository.refreshData();
         mRoomRepository.refreshData();
     }

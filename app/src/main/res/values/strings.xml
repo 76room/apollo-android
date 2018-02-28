@@ -61,5 +61,8 @@
     <string name="select_from_gallery">Select from gallery</string>
     <string name="take_photo">Take photo</string>
     <string name="select_dialog_title">Select from:</string>
+    <string name="version_name">version</string>
+    <string name="my_rooms">My Rooms</string>
+    <string name="all_rooms">All Rooms</string>
 
 </resources>

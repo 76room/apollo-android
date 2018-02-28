@@ -69,16 +69,19 @@
                 tools:text="Room title" />
 
             <ImageButton
+                android:id="@+id/add"
                 style="@style/IconStyle"
-                android:background="@drawable/ic_map_marker"
+                android:background="@drawable/ic_add_to_list"
                 android:contentDescription="@string/location_icon_description" />
 
             <ImageButton
+                android:id="@+id/location"
                 style="@style/IconStyle"
-                android:background="@drawable/ic_heart"
+                android:background="@drawable/ic_map_marker"
                 android:contentDescription="@string/heart_icon_description" />
 
             <ImageButton
+                android:id="@+id/share"
                 style="@style/IconStyle"
                 android:background="@drawable/ic_share_variant"
                 android:contentDescription="@string/share_icon_description" />
