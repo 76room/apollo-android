@@ -50,7 +50,9 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SignInActivity.SIGN_IN) {
-            startActivity(new Intent(getApplicationContext(), RoomsActivity.class));
+            Intent intent = new Intent(getApplicationContext(), RoomsActivity.class);
+            intent.putExtra("my",true);
+            startActivity(intent);
             finish();
         }
     }

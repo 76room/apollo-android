@@ -48,6 +48,11 @@ public class FirebaseDataRoomRepository implements Repository<Room> {
     }
 
     @Override
+    public void updateItem(Room item) {
+        DATABASE.child(TABLE_NAME).child(item.getId()).setValue(item);
+    }
+
+    @Override
     public void getItems(@NonNull final LoadCallback<Room> callback) {
         callback.onLoaded(mList);
     }
@@ -60,7 +65,7 @@ public class FirebaseDataRoomRepository implements Repository<Room> {
     }
 
     @Override
-    public void saveItem(@NonNull Room item) {
+    public synchronized void saveItem(@NonNull Room item) {
         DATABASE.child(TABLE_NAME).child(item.getId()).setValue(item);
         mList.add(item);
     }
@@ -68,5 +73,10 @@ public class FirebaseDataRoomRepository implements Repository<Room> {
     @Override
     public void refreshData() {
         refresh();
+    }
+
+    @Override
+    public boolean contains(Room item) {
+        return mList.contains(item);
     }
 }

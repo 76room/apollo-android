@@ -114,11 +114,13 @@ public abstract class BaseNavigationActivity extends AppCompatActivity implement
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.my_rooms_navigation_menu_item:
-                        startActivity(new Intent(getApplicationContext(), RoomsActivity.class));
+                        Intent intent = new Intent(getApplicationContext(), RoomsActivity.class);
+                        intent.putExtra("my",true);
+                        startActivity(intent);
                         break;
                     case R.id.find_rooms_navigation_menu_item:
                         Intent i = new Intent(getApplicationContext(), RoomsActivity.class);
-                        i.setAction(SEARCH_SERVICE);
+                        i.putExtra("my",false);
                         startActivity(i);
                         break;
                     case R.id.find_music_navigation_menu_item:

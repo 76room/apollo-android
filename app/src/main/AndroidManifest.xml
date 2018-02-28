@@ -24,8 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".rooms.RoomsActivity"
-            android:launchMode="singleTask">
+            android:name=".rooms.RoomsActivity">
         </activity>
         <activity android:name=".roomdetail.RoomDetailActivity" />
         <activity android:name=".addroom.AddRoomActivity" />

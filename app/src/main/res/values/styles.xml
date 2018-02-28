@@ -58,8 +58,8 @@
     <style name="IconStyle">
         <item name="android:layout_width">24dp</item>
         <item name="android:layout_height">24dp</item>
-        <item name="android:layout_marginLeft">6dp</item>
-        <item name="android:layout_marginRight">6dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
     </style>
 
     <style name="AlertDialog">

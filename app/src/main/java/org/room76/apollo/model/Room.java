@@ -5,7 +5,10 @@ import android.support.annotation.Nullable;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.PropertyName;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,10 +20,8 @@ import java.util.UUID;
 public final class Room {
     @PropertyName("id")
     private String mId;
-    @Nullable
     @PropertyName("author")
     private User mAuthor;
-    @Nullable
     @PropertyName("title")
     private String mTitle;
     @Nullable
@@ -38,11 +39,11 @@ public final class Room {
 
     public Room(){}
 
-    public Room(@Nullable User author, @Nullable String title, @Nullable String description, boolean isOpen) {
+    public Room(@NotNull User author,@NotNull String title, @Nullable String description, boolean isOpen) {
         this(author, title, description, isOpen, null);
     }
 
-    public Room(@Nullable User author, @Nullable String title, @Nullable String description, boolean isOpen, @Nullable String imageUrl) {
+    public Room(@NotNull User author, @NotNull String title, @Nullable String description, boolean isOpen, @Nullable String imageUrl) {
         mId = UUID.randomUUID().toString();
         mAuthor = author;
         mTitle = title;
@@ -76,7 +77,6 @@ public final class Room {
         return mImageUrl;
     }
 
-    @Nullable
     public User getAuthor() {
         return mAuthor;
     }
@@ -96,6 +96,25 @@ public final class Room {
 
     public void setUsers(List<User> mUsers) {
         this.mUsers = mUsers;
+    }
+
+    public void addUser(User user) {
+        mUsers.add(user);
+    }
+
+    public void removeUser(String userID) {
+        User toRemove = null;
+        for (User u : mUsers) {
+            if (u.getFirebaseUserId().equals(userID)) toRemove = u;
+        }
+        mUsers.remove(toRemove);
+    }
+
+    public boolean containsUser(String userID){
+        for (User u: mUsers) {
+            if (u.getFirebaseUserId().equals(userID)) return true;
+        }
+        return false;
     }
 
     public List<Track> getTracks() {

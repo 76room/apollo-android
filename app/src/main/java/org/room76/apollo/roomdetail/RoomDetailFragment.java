@@ -8,11 +8,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.util.SortedList;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -33,7 +30,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.R;
 import org.room76.apollo.model.Track;
@@ -43,7 +39,6 @@ import org.room76.apollo.util.CircleTransform;
 import org.room76.apollo.util.EspressoIdlingResource;
 import org.room76.apollo.util.Injection;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,7 +190,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     public void showIsOpen(boolean isOpen) {
         mIsOpen.setVisibility(View.VISIBLE);
         if (isOpen) {
-            mIsOpen.setBackgroundResource(R.drawable.ic_door);
+            mIsOpen.setBackgroundResource(R.drawable.ic_lock_open);
         } else {
             mIsOpen.setBackgroundResource(R.drawable.ic_lock_outline);
         }

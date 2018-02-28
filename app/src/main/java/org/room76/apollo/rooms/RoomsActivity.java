@@ -5,22 +5,30 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import org.room76.apollo.BaseNavigationActivity;
+import org.room76.apollo.R;
+import org.room76.apollo.model.Room;
 
 
 public class RoomsActivity extends BaseNavigationActivity {
 
-    private RoomsFragment mFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mFragment = RoomsFragment.newInstance();
-        setFragment(mFragment);
+        updateFragment(getIntent());
         super.onCreate(savedInstanceState);
+        if (getIntent().getExtras().getBoolean("my")){
+            setTitle(R.string.my_rooms);
+        } else setTitle(R.string.all_rooms);
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        mFragment.update(intent.getAction()!=null);
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        updateFragment(intent);
+////        ((RoomsFragment)mFragment).update();
+//    }
+
+    private void updateFragment(Intent intent) {
+        mFragment = RoomsFragment.newInstance(intent.getExtras().getBoolean("my"));
+        setFragment(mFragment);
     }
 }

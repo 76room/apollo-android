@@ -19,6 +19,8 @@ public final class LocalTrackRepository implements Repository<Track> {
     private List<Track> mTracks = new ArrayList<>();
     private Thread mRefreshThread;
 
+    @Override public void updateItem(Track item) {}
+
     @Override
     public void getItems(@NonNull LoadCallback<Track> callback) {
         if (mRefreshThread.isAlive()){
@@ -40,10 +42,7 @@ public final class LocalTrackRepository implements Repository<Track> {
         }
     }
 
-    @Override
-    public void saveItem(@NonNull Track item) {
-
-    }
+    @Override public void saveItem(@NonNull Track item) {}
 
     @Override
     public void refreshData() {
@@ -54,6 +53,11 @@ public final class LocalTrackRepository implements Repository<Track> {
             }
         });
         mRefreshThread.start();
+    }
+
+    @Override
+    public boolean contains(Track item) {
+        return false;
     }
 
     private void load(){

@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,14 +48,20 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
     private ActivityOptions mOptions;
 
-    private boolean mSearchPresent;
+    protected FloatingActionButton mFab;
+
+    private boolean isFiltered;
 
     public RoomsFragment() {
         // Requires empty public constructor
     }
 
-    public static RoomsFragment newInstance() {
-        return new RoomsFragment();
+    public static RoomsFragment newInstance(boolean filter) {
+        RoomsFragment f = new RoomsFragment();
+        Bundle b = new Bundle();
+        b.putBoolean("my", filter);
+        f.setArguments(b);
+        return f;
     }
 
     @Override
@@ -73,7 +80,6 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setRetainInstance(true);
     }
 
@@ -101,15 +107,16 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Set up floating action button
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab_add_rooms);
+        mFab = getActivity().findViewById(R.id.fab_add_rooms);
 
-        fab.setImageResource(R.drawable.ic_add);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab.setImageResource(R.drawable.ic_add);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActionsListener.addNewRoom();
             }
         });
+
 
         // Pull-to-refresh
         SwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.refresh_layout);
@@ -123,6 +130,9 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
                 mActionsListener.loadRooms(true);
             }
         });
+
+        isFiltered = getArguments().getBoolean("my");
+        if (!isFiltered) mFab.setVisibility(View.GONE);
         return root;
     }
 
@@ -155,6 +165,15 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
 
     @Override
     public void showRooms(List<Room> rooms) {
+        if (isFiltered) {
+            List<Room> filtered = new ArrayList<>();
+            for (Room item: rooms) {
+                if (item.containsUser(SignInState.getInstance().getUser().getUid())) {
+                    filtered.add(item);
+                }
+            }
+            rooms = filtered;
+        }
         mListAdapter.replaceData(rooms);
     }
 
@@ -210,18 +229,13 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(final ViewHolder viewHolder, int position) {
             final int itemType = getItemViewType(position);
-
-            Room room = mRooms.get(position);
-
-            if (mSearchPresent
-                    && room.getAuthor()!=null
-                    && room.getAuthor().getFirebaseUserId().equals(SignInState.getInstance().getUser().getUid())) {
-                viewHolder.itemView.setVisibility(View.GONE);
-            }
-
+            final Room room = mRooms.get(position);
             viewHolder.title.setText(room.getTitle());
+            viewHolder.mAddButton.setBackground(mActionsListener.contains(room)?
+                    getContext().getDrawable(R.drawable.ic_remove) :
+                    getContext().getDrawable(R.drawable.ic_add_to_list));
 
             if (room.getAuthor() != null && room.getAuthor().getPhotoUrl() != null) {
                 Glide.with(viewHolder.itemView.getContext())
@@ -231,20 +245,35 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
                         .into(viewHolder.authorImage);
             }
 
-
             if (itemType == ITEM_TYPE_FULL) {
                 Glide.with(viewHolder.itemView.getContext())
                         .load(room.getImageUrl())
                         .into(((FullViewHolder) viewHolder).roomImage);
 
                 if (room.isOpen()) {
-                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_door);
+                    ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_lock_open);
                 } else {
                     ((FullViewHolder)viewHolder).isOpen.setBackgroundResource(R.drawable.ic_lock_outline);
                 }
             } else {
                 ((NoImageViewHolder)viewHolder).description.setText(room.getDescription());
             }
+            viewHolder.mAddButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scaleClickAnimation(view);
+                    mActionsListener.addToRoom(room);
+                    viewHolder.mAddButton.setBackground(mActionsListener.contains(room)?
+                            view.getContext().getDrawable(R.drawable.ic_remove) :
+                            view.getContext().getDrawable(R.drawable.ic_add_to_list));
+                }
+            });
+            viewHolder.mShareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scaleClickAnimation(view);
+                }
+            });
         }
 
         public void replaceData(List<Room> rooms) {
@@ -277,7 +306,7 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             public TextView title;
-            public ImageButton authorImage;
+            public ImageButton authorImage , mAddButton, mShareButton;
 
             private RoomItemListener mItemListener;
 
@@ -286,14 +315,23 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
                 mItemListener = listener;
                 title = itemView.findViewById(R.id.room_detail_title);
                 authorImage = itemView.findViewById(R.id.room_author_image);
-                itemView.setOnClickListener(this);
+                mShareButton = itemView.findViewById(R.id.share);
+                itemView.findViewById(R.id.location).setOnClickListener(this);
+                mAddButton = itemView.findViewById(R.id.add);
+                authorImage.setOnClickListener(this);
             }
 
             @Override
             public void onClick(View v) {
-                int position = getAdapterPosition();
-                Room room = getItem(position);
-                mItemListener.onRoomClick(room);
+                switch (v.getId()){
+                    case R.id.location:
+                        //TODO
+                        break;
+                    default:
+                        int position = getAdapterPosition();
+                        Room room = getItem(position);
+                        mItemListener.onRoomClick(room);
+                }
             }
         }
 
@@ -303,6 +341,7 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
             public NoImageViewHolder(View itemView, RoomItemListener listener) {
                 super(itemView, listener);
                 description = itemView.findViewById(R.id.room_detail_description);
+                description.setOnClickListener(this);
             }
         }
 
@@ -313,6 +352,7 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
             public FullViewHolder(View itemView, RoomItemListener listener) {
                 super(itemView, listener);
                 roomImage = itemView.findViewById(R.id.room_detail_image);
+                roomImage.setOnClickListener(this);
                 isOpen = itemView.findViewById(R.id.room_is_open);
             }
 
@@ -329,13 +369,27 @@ public class RoomsFragment extends Fragment implements RoomsContract.View {
     }
 
     public interface RoomItemListener {
-
         void onRoomClick(Room clickedRoom);
     }
 
-    public void update(boolean value){
-        mSearchPresent = value;
+    public void update(){
         mListAdapter.notifyDataSetChanged();
+    }
+
+    private void scaleClickAnimation(final View view){
+        view.animate()
+                .scaleX(1.4f)
+                .scaleY(1.4f)
+                .setDuration(200)
+                .setInterpolator(new FastOutLinearInInterpolator())
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.setScaleX(1);
+                        view.setScaleY(1);
+                    }
+                })
+                .start();
     }
 
 }

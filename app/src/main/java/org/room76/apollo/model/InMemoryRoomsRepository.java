@@ -41,6 +41,11 @@ public final class InMemoryRoomsRepository implements Repository<Room> {
     }
 
     @Override
+    public void updateItem(Room item) {
+
+    }
+
+    @Override
     public void saveItem(@NonNull Room room) {
         mRoomsServiceApi.saveRoom(room);
         refreshData();
@@ -60,6 +65,11 @@ public final class InMemoryRoomsRepository implements Repository<Room> {
     @Override
     public void refreshData() {
         mCachedRooms = null;
+    }
+
+    @Override
+    public boolean contains(Room item) {
+        return false;
     }
 
 }
