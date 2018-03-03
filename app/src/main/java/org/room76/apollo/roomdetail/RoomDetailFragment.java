@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.room76.apollo.R;
+import org.room76.apollo.model.Room;
 import org.room76.apollo.model.Track;
 import org.room76.apollo.model.User;
 import org.room76.apollo.signin.SignInState;
@@ -87,6 +89,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
     private SortedList<Track> mTracks;
 
     private List<Track> mRecommendations;
+
+    private Room mCurrentRoom;
 
 //    private ImageButton mAuthorImage;
 
@@ -350,7 +354,7 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
     }
 
-    private static class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
+    private class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
 
         private List<User> mUsers;
 
@@ -368,9 +372,13 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         }
 
         @Override
-        public void onBindViewHolder(UserViewHolder viewHolder, int position) {
+        public void onBindViewHolder(final UserViewHolder viewHolder, int position) {
             User user = mUsers.get(position);
             viewHolder.mTextView.setText(user.getName());
+
+//            if (mCurrentRoom!=null && user.getFirebaseUserId().equals(mCurrentRoom.getAuthor().getFirebaseUserId())) {
+//                viewHolder.mStarView.setVisibility(View.VISIBLE);
+//            }
 
             EspressoIdlingResource.increment();
 
@@ -387,6 +395,24 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
                         }
                     });
 
+//            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    viewHolder.mImageView.animate()
+//                            .setDuration(300)
+//                            .setInterpolator(new DecelerateInterpolator())
+//                            .scaleY(1.2f)
+//                            .scaleX(1.2f)
+//                            .withEndAction(new Runnable() {
+//                                               @Override
+//                                               public void run() {
+//                                                   viewHolder.mTextView.setVisibility(View.VISIBLE);
+//                                               }
+//                                           })
+//                            .start();
+//                }
+//            });
+
         }
 
         private void setList(List<User> users) {
@@ -400,12 +426,13 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
 
         public class UserViewHolder extends RecyclerView.ViewHolder{
 
-            ImageView mImageView;
+            ImageView mImageView, mStarView;
             TextView mTextView;
 
             public UserViewHolder(View itemView) {
                 super(itemView);
                 mImageView = itemView.findViewById(R.id.user_image);
+                mStarView = itemView.findViewById(R.id.star);
                 mTextView = itemView.findViewById(R.id.user_email);
             }
         }
@@ -509,4 +536,8 @@ public class RoomDetailFragment extends Fragment implements RoomDetailContract.V
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public void setRoom(Room room) {
+        mCurrentRoom = room;
+    }
 }

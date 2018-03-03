@@ -40,6 +40,7 @@ public class RoomDetailPresenter implements RoomDetailContract.UserActionsListen
                 if (null == item) {
                     mRoomsDetailView.showMissingRoom();
                 } else {
+                    mRoomsDetailView.setRoom(item);
                     showRoom(item);
                 }
             }
